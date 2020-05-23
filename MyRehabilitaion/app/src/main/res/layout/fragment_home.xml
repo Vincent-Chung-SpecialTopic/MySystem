@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_01"
+    android:background="@drawable/simplepg"
     tools:context="com.example.myrehabilitaion.FragmentHomePage.HomeFragment">
 
     <ImageButton
@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:padding="20dp"
+        android:background="@drawable/btn_design02"
         app:srcCompat="@drawable/ic_add_box_black_24dp"/>
 
     <ImageButton
@@ -27,6 +28,7 @@
         app:layout_constraintStart_toEndOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="@+id/imageButton"
         android:padding="20dp"
+        android:background="@drawable/btn_design02"
         app:srcCompat="@drawable/ic_add_box_black_24dp"/>
 
     <ImageButton
@@ -37,6 +39,7 @@
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
         app:layout_constraintTop_toTopOf="@+id/imageButton2"
         android:padding="20dp"
+        android:background="@drawable/btn_design02"
         app:srcCompat="@drawable/ic_add_box_black_24dp"/>
 
     <ImageButton
@@ -48,6 +51,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageButton5"
         app:layout_constraintEnd_toStartOf="@+id/imageButton5"
         android:padding="20dp"
+        android:background="@drawable/btn_design02"
         app:srcCompat="@drawable/ic_add_box_black_24dp"/>
 
     <ImageButton
@@ -59,6 +63,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageButton6"
         app:layout_constraintEnd_toStartOf="@+id/imageButton6"
         android:padding="20dp"
+        android:background="@drawable/btn_design02"
         app:srcCompat="@drawable/ic_add_box_black_24dp"/>
 
     <ImageButton
@@ -69,13 +74,14 @@
         app:layout_constraintEnd_toEndOf="@+id/imageButton3"
         app:layout_constraintTop_toBottomOf="@+id/imageButton3"
         android:padding="20dp"
+        android:background="@drawable/btn_design02"
         app:srcCompat="@drawable/ic_add_box_black_24dp"/>
 
     <ImageButton
         android:id="@+id/imageButton8"
         android:layout_width="376dp"
         android:layout_height="192dp"
-        android:src="@drawable/bg_general"
+        android:src="@drawable/ic_menu_slideshow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.485"
