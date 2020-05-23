@@ -18,7 +18,7 @@ import com.example.myrehabilitaion.R;
 
 public class HomeFragment extends Fragment {
 
-    ImageButton TargetBtn01;
+    //ImageButton TargetBtn01;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,

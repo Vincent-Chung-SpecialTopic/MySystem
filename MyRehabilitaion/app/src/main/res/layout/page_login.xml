@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DCE9E4"
+    android:background="@drawable/loginpg"
     tools:context=".LoginPage">
 
     <ImageView
@@ -20,10 +20,10 @@
 
     <EditText
         android:id="@+id/edtEmailLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="#CAD0DC"
+        android:background="#80FFFFFF"
         android:ems="10"
         android:hint="帳號"
         android:inputType="textPersonName"
@@ -35,10 +35,10 @@
 
     <EditText
         android:id="@+id/editPasswordLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="#CAD0DC"
+        android:background="#80FFFFFF"
         android:ems="10"
         android:hint="密碼"
         android:inputType="textPassword"
@@ -83,6 +83,7 @@
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:background="@drawable/btn_design01"
             android:text="訪客登入"
             android:textSize="24sp" />
 
@@ -94,6 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="128dp"
         android:layout_marginTop="44dp"
+        android:background="@drawable/btn_design01"
         android:text="忘記密碼"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -104,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="144dp"
+        android:background="#80FFFFFF"
         android:text="註冊"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
