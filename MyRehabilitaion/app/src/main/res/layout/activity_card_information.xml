@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_marble"
     tools:context=".CardInformation">
 
     <LinearLayout
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:gravity="center"
+            android:background="#BFFFFFFF"
             android:orientation="horizontal">
             <TextView
                 android:layout_height="match_parent"
@@ -38,7 +40,7 @@
                 android:layout_width="0dp"
                 android:text="TOTORO"
                 android:textSize="24sp"
-                android:textColor="#FFFFFF"
+                android:textColor="#111111"
                 android:textAlignment="center"/>
 
             <ImageView
@@ -53,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:orientation="vertical"
-            android:background="#80111111">
+            android:background="#80FFFFFF">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

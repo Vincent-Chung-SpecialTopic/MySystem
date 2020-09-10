@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentHomePage.StartRecord"
-    android:background="@drawable/bg_start">
+    android:background="@drawable/bg_marble">
 
     <LinearLayout
         android:layout_width="300dp"
@@ -36,14 +36,14 @@
                 android:layout_height="wrap_content"
                 android:text="部位"
                 android:textAlignment="center"
-                android:textSize="60sp" />
+                android:textSize="36sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="本次目標"
+                android:text="腳踝"
                 android:textAlignment="center"
-                android:textSize="48sp" />
+                android:textSize="60sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,10 +73,11 @@
                     android:textSize="32sp" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/spin_unit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:entries="@array/unit_list" />
             </LinearLayout>
 
             <LinearLayout
@@ -92,7 +93,7 @@
                     android:textSize="32sp" />
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/edt_inputarget"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

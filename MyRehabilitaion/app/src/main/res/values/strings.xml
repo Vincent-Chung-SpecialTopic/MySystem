@@ -42,5 +42,10 @@
         <item>R.drawable.example</item>
     </string-array>
 
+    <string-array name="unit_list">
+        <item>次數</item>
+        <item>時間</item>
+    </string-array>
+
 
 </resources>

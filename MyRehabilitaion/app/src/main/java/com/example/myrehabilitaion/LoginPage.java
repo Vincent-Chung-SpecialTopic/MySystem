@@ -63,6 +63,7 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginPage.this,Main.class);
+                intent.putExtra("count","1");
                 startActivity(intent);
 
             }

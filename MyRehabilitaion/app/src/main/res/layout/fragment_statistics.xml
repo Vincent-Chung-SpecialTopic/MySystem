@@ -5,4 +5,28 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentHomePage.Statistics"/>
+    android:background="@drawable/bg_marble"
+    tools:context=".FragmentHomePage.Statistics">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="408dp"
+        android:layout_height="657dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="3dp"
+        tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/bottom_navigation"
+        tools:layout_editor_absoluteX="-16dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

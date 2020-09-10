@@ -7,7 +7,7 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/simplepg"
+    android:background="@drawable/bg_marble"
     tools:context="com.example.myrehabilitaion.FragmentHomePage.HomeFragment">
 
     <androidx.viewpager.widget.ViewPager
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#80111111"/>
+        android:background="#00FFFFFF"/>
 
     <Button
         android:id="@+id/btn_addcase"

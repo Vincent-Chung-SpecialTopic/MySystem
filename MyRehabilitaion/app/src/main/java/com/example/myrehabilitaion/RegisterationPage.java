@@ -12,10 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.myrehabilitaion.Connection.ConnectionClass;
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -24,9 +20,13 @@ public class RegisterationPage extends AppCompatActivity {
 
     EditText name,email,password;
     Button registerbtn;
-    TextView status;
     Connection con;
     Statement stmt;
+
+    public static String ip = "140.131.114.241";
+    public static String un = "109-rehabilitation";
+    public static String pass = "case210906";
+    public static String db = "1@case206";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +68,12 @@ public class RegisterationPage extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try{
-                con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),ConnectionClass.ip.toString());
+                con = connectionClass(un.toString(),pass.toString(),db.toString(),ip.toString());
                 if(con == null){
                     z = "Check Your Internet Connection";
                 }
                 else{
-                    String sql = "INSERT INTO register (name,email,password) VALUES ('"+name.getText()+"','"+email.getText()+"','"+password.getText()+"')";
+                    String sql = "INSERT INTO dbo.registered (username,Email,passwd) VALUES ('"+name.getText()+"','"+email.getText()+"','"+password.getText()+"')";
                     stmt = con.createStatement();
                     stmt.executeUpdate(sql);
                 }

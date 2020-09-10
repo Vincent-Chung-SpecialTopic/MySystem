@@ -1,30 +1,24 @@
 package com.example.myrehabilitaion.FragmentHomePage;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myrehabilitaion.BarChartFragment;
+import com.example.myrehabilitaion.PieChartFragment;
 import com.example.myrehabilitaion.R;
+import com.example.myrehabilitaion.RadarChartFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-/*
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.Legend.LegendForm;
-import com.github.mikephil.charting.components.Legend.LegendPosition;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ValueFormatter;
 
- */
-//版权声明：本文为CSDN博主「zhangphil」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-//原文链接：https://blog.csdn.net/zhangphil/java/article/details/47656521
 
 public class Statistics extends Fragment {
 
@@ -39,9 +33,35 @@ public class Statistics extends Fragment {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_statistics, container, false);
 
+        BottomNavigationView bottomNav = root.findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container,new PieChartFragment()).commit();
 
 
         return root;
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+
+            switch(item.getItemId()){
+                case R.id.nav_pie:
+                    selectedFragment = new PieChartFragment();
+                    break;
+                case R.id.nav_bar:
+                    selectedFragment = new BarChartFragment();
+                    break;
+                case R.id.nav_line:
+                    selectedFragment = new RadarChartFragment();
+                    break;
+            }
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+
+            return true;
+        }
+    };
 
 }

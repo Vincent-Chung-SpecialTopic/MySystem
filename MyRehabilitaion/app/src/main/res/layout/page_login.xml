@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_formal"
+    android:background="@drawable/bg_marble"
     tools:context=".LoginPage">
 
     <TextView
@@ -13,14 +13,47 @@
         android:layout_height="wrap_content"
         android:text="自主式復建記錄分析管理"
         android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.812"
+        app:layout_constraintHorizontal_bias="0.834"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.931" />
+        app:layout_constraintVertical_bias="0.922" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" “&quot;The first and best victory is to conquer self.&quot; "
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.858"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" “ – Plato, Greek philosopher "
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.896"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.977" />
 
     <ImageView
         android:id="@+id/img_logo"
@@ -39,7 +72,7 @@
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
-        android:background="#80FFFFFF"
+        android:background="#80111111"
         android:ems="10"
         android:hint="帳號"
         android:inputType="textPersonName"
@@ -54,7 +87,7 @@
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
-        android:background="#80FFFFFF"
+        android:background="#80111111"
         android:ems="10"
         android:hint="密碼"
         android:inputType="textPassword"
@@ -70,7 +103,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="#80FFFFFF"
+        android:background="#80111111"
         android:text="保持登入"
         app:layout_constraintEnd_toEndOf="@+id/editPasswordLogin"
         app:layout_constraintHorizontal_bias="0.0"

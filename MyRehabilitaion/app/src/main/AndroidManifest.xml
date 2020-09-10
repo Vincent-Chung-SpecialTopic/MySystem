@@ -13,7 +13,10 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CardInformation"></activity>
+        <activity android:name=".RadarChartFragment"></activity>
+        <activity android:name=".PieChartFragment" />
+        <activity android:name=".BarChartFragment" />
+        <activity android:name=".CardInformation" />
         <activity android:name=".RecordMain" />
         <activity android:name=".InforCard" />
         <activity android:name=".Main" />
