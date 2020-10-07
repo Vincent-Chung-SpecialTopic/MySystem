@@ -7,8 +7,8 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_marble"
-    tools:context="com.example.myrehabilitaion.FragmentHomePage.HomeFragment">
+    android:background="@drawable/bg_01"
+    tools:context="com.example.myrehabilitaion.Frag_Home">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"

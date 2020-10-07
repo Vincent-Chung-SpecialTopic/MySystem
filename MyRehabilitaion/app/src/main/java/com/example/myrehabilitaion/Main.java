@@ -1,29 +1,19 @@
 package com.example.myrehabilitaion;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.myrehabilitaion.FragmentHomePage.HomeFragment;
-import com.example.myrehabilitaion.FragmentHomePage.Statistics;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 public class Main extends AppCompatActivity {
 
@@ -40,35 +30,6 @@ public class Main extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
 
-
-        //final FloatingActionButton fab01 = findViewById(R.id.fab01);
-        //final FloatingActionButton fab02 = findViewById(R.id.fab02);
-        //fab02.setVisibility(View.INVISIBLE);
-        //fab01.setOnClickListener(new View.OnClickListener() {
-           // @Override
-            //public void onClick(View v) {
-
-                //fab01.setVisibility(View.INVISIBLE);
-                //fab02.setVisibility(View.VISIBLE);
-
-                //fab02.setOnClickListener(new View.OnClickListener() {
-                    //@Override
-                    //public void onClick(View view) {
-//                Snackbar.make(view, "開啟統計頁面", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-/*
-                Intent intent = new Intent(Main.this,HomePage.class);
-                startActivity(intent);
-*/
-                        //Main.this.showStatisticsFragment();
-
-                      //  fab02.setVisibility(View.INVISIBLE);
-                       // fab01.setVisibility(View.VISIBLE);
-                //    }
-               // });
-        //    }
-       // });
-
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -81,7 +42,7 @@ public class Main extends AppCompatActivity {
         // menu should be considered as top level destinations.
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.menuItemHome, R.id.menuItemInfo, R.id.menuItemServiceMng, R.id.menuItemAbout, R.id.menuItemStatistics)
+                R.id.menuItemHome, R.id.menuItemAbout)
                 .setDrawerLayout(mDrawerLayout)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

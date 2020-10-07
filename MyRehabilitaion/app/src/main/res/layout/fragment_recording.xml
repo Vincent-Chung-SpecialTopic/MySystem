@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_marble"
-    tools:context=".FragmentHomePage.Recording">
+    android:background="@drawable/bg_01"
+    tools:context=".Frag_Recording">
 
 
     <TextView

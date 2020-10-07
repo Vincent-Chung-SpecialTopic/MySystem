@@ -40,14 +40,14 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="目標名稱"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/edt_updatetargetname"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="目標名稱"
+                android:hint="目標名稱"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -64,9 +64,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="部位"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/edt_bodypart"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -88,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="建立時間"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/edt_date"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -113,15 +113,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="紀錄單位"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/edt_unit"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="單位"
+                android:hint="單位"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -137,14 +137,14 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="預計完成"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/txt_targetdate"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:text="目標日期"
+                android:hint="目標日期"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -157,9 +157,8 @@
             <Button
                 android:id="@+id/btn_updatetargt"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#FF8000"
                 android:text="儲存"
                 android:textSize="32sp" />
 
@@ -176,7 +175,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#FF0000"
                 android:text="刪除"
                 android:textSize="32sp" />
 

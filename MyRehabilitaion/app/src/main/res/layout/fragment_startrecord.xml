@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentHomePage.StartRecord"
-    android:background="@drawable/bg_marble">
+    tools:context=".Frag_StartRecord"
+    android:clickable="true"
+    android:background="@drawable/bg_01">
 
     <LinearLayout
         android:layout_width="300dp"

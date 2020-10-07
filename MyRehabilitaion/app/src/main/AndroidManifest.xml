@@ -1,31 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myrehabilitaion">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.myrehabilitaion" >
 
+    <uses-feature
+        android:name="android.hardware.Camera"
+        android:required="true"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.Manifest.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/new_logo"
         android:label="健步飛"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@drawable/new_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".RadarChartFragment"></activity>
-        <activity android:name=".PieChartFragment" />
-        <activity android:name=".BarChartFragment" />
-        <activity android:name=".CardInformation" />
+        android:theme="@style/AppTheme" >
+<!--        <activity-->
+<!--            android:name=".Class_NewHome"-->
+<!--            android:label="@string/app_name"-->
+<!--            tools:ignore="Instantiatable">-->
+<!--        <activity-->
+<!--            android:name=".Frag_LineChart"-->
+<!--            tools:ignore="Instantiatable" />-->
+<!--        <activity-->
+<!--            android:name=".Frag_PieChart"-->
+<!--            tools:ignore="Instantiatable" />-->
+<!--        <activity-->
+<!--            android:name=".Frag_BarChart"-->
+<!--            tools:ignore="Instantiatable" />-->
+<!--        <activity-->
+<!--            android:name=".FragmentHomePage.Frag_StartRecord"-->
+<!--            tools:ignore="Instantiatable" />-->
+        <activity
+            android:name=".UsersDbOpenHelper"
+            tools:ignore="Instantiatable" />
         <activity android:name=".RecordMain" />
         <activity android:name=".InforCard" />
         <activity android:name=".Main" />
-        <activity android:name=".MainActivity22_1" />
-        <activity android:name=".MainActivity22_2" />
-        <activity android:name=".RegisterationPage" />
-        <activity android:name=".FragmentHomePage.StartRecord" />
-        <activity android:name=".UsersDbOpenHelper" />
-        <activity android:name=".LoginPage">
+        <activity android:name=".Class_Registeration" />
+        <activity android:name=".Class_Login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

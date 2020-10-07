@@ -8,8 +8,8 @@
     android:orientation="vertical"
     android:padding="30dp"
     android:gravity="center_horizontal"
-    android:background="@drawable/bg_marble"
-    tools:context="com.example.myrehabilitaion.FragmentHomePage.PsInfoFragment">
+    android:background="@drawable/bg_01"
+    tools:context="com.example.myrehabilitaion.FragmentHomePage.Frag_PrivateInfo">
 
     <LinearLayout
         android:layout_width="wrap_content"
