@@ -6,7 +6,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_01"
+    android:background="@drawable/bg_05"
     tools:context=".ui.Stastics.Frag_Statistics">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             app:itemRippleColor="#000000"
             app:itemIconTint="#ffffff"
             app:itemTextColor="#ffffff"
-            android:background="@drawable/bg_04"
+            android:background="@drawable/bg_06"
             app:menu="@menu/bottom_navigation" />
 
         <FrameLayout

@@ -1,20 +1,34 @@
 package com.example.myrehabilitaion.ui.Record;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.myrehabilitaion.Class_Login;
+import com.example.myrehabilitaion.Class_Registeration;
+import com.example.myrehabilitaion.GlobalVariable;
 import com.example.myrehabilitaion.Main;
 import com.example.myrehabilitaion.R;
 import com.example.myrehabilitaion.RecyclerExampleViewAdapter;
@@ -22,17 +36,51 @@ import com.example.myrehabilitaion.RecyclerInfoAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 public class RecordFragment extends Fragment {
 
 
+    private static String ip = "140.131.114.241";
+    private static String port = "1433";
+    private static String Classes = "net.sourceforge.jtds.jdbc.Driver";
+    private static String database = "109-rehabilitation";
+    private static String username = "case210906";
+    private static String password = "1@case206";
+    private static String url = "jdbc:jtds:sqlserver://"+ip+":"+port+"/"+database;
+
+    private Connection connection = null;
+
+    Statement statement = null;
+
 
     private RecyclerExampleViewAdapter adapter_exampler;
     RecyclerView recyclerexample;
-    Button imgbtnaddcase;
-    Dialog mDlog;
+    Dialog mDlog01;
+
+    public EditText edttargetname;
+    public EditText edtaddtime;
+
+    public List<String> listStr01;
+    public List<String> listStr02;
+    public List<String> listStr03;
+    public List<Integer> listImg;
+
+    service_sync_todb service_sync_todb;
+    service_sync_fromdb service_sync_fromdb;
+
+    public String sync_name;
+
+    GlobalVariable gv ;
+
 
     private RecyclerInfoAdapter infoadapter;
     RecyclerView recyclerInfo;
@@ -40,32 +88,54 @@ public class RecordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_frag__record, container, false);
 
-        List<String> listStr = new ArrayList<String>();
-        List<Integer> listImg = new ArrayList<Integer>();
+        gv = (GlobalVariable)getActivity().getApplicationContext();
+
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        try {
+            Class.forName(Classes);
+            connection = DriverManager.getConnection(url, username,password);
+            Toast toast = Toast.makeText(getContext(),"Success", Toast.LENGTH_SHORT);
+            toast.show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            Toast toast = Toast.makeText(getContext(),"ERROR", Toast.LENGTH_SHORT);
+            toast.show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast toast = Toast.makeText(getContext(),"FAILURE", Toast.LENGTH_SHORT);
+            toast.show();
+
+        }
+
+
+//        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+//        toolbar.setTitle("診療中的項目");
+
+        listStr01 = new ArrayList<String>();
+        listStr02 = new ArrayList<String>();
+        listStr03 = new ArrayList<String>();
+        listImg = new ArrayList<Integer>();
 
 //        for( int i=0 ; i <3 ; i++){
 //            listStr.add(new String("目標" + String.valueOf(i+1)));
 //        }
-        String[] target_name = {"電療", "下肢動作"};
-        for(int i=0;i<target_name.length;i++){
-            listStr.add(target_name[i]);
-        }
-        Integer[] target_img ={R.drawable.electherapy, R.drawable.legtrain};
-        for(int i=0;i<target_img.length;i++){
-            listImg.add(target_img[i]);
-        }
-
-
 
 
         recyclerexample = root.findViewById(R.id.recyclerview_home);
         recyclerexample.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
-        adapter_exampler = new RecyclerExampleViewAdapter(listStr, listImg);
+
+        service_sync_fromdb = new service_sync_fromdb();
+        service_sync_fromdb.execute();
+
+        adapter_exampler = new RecyclerExampleViewAdapter(listStr01, listStr02, listImg);
         //adapter_home.addItem(sercmng.Syc());
 
-
         recyclerexample.setAdapter(adapter_exampler);
+
 
 //        imgbtnaddcase = root.findViewById(R.id.btn_addcase);
 //        imgbtnaddcase.setOnClickListener(new View.OnClickListener() {
@@ -171,11 +241,10 @@ public class RecordFragment extends Fragment {
 //        //這裡的GuiPageChangeListener是第四步定義好的。
 //        viewPager.addOnPageChangeListener(new GuidePageChangeListener(tips, pageview));
 
-
-
         final FloatingActionButton fab01 = root.findViewById(R.id.floatingActionButton);
 //        final FloatingActionButton fab02 = root.findViewById(R.id.fab02);
 //        fab02.setVisibility(View.INVISIBLE);
+
         fab01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,29 +264,198 @@ public class RecordFragment extends Fragment {
 //
 //                        fab02.setVisibility(View.INVISIBLE);
 //                        fab01.setVisibility(View.VISIBLE);
-                mDlog = new Dialog(v.getContext());
-                mDlog.setContentView(R.layout.dlg_addtarget);
-                mDlog.setCancelable(true);
-                mDlog.show();
+                mDlog01 = new Dialog(v.getContext());
+                mDlog01.setContentView(R.layout.dlg_addtarget);
+                mDlog01.setCancelable(true);
+                mDlog01.show();
 
-                Button btnaddtargt = mDlog.findViewById(R.id.btn_addtargt);
-                Button btncancelbox = mDlog.findViewById(R.id.btn_cancelbox);
-                final EditText edttargetname = mDlog.findViewById(R.id.edt_targetname);
+                Button btnaddtargt = mDlog01.findViewById(R.id.btn_addtargt);
+                Button btncancelbox = mDlog01.findViewById(R.id.btn_cancelbox);
+                edttargetname = mDlog01.findViewById(R.id.edt_targetname);
+                edtaddtime = mDlog01.findViewById(R.id.edt_targetdate);
+
+                edtaddtime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar now = Calendar.getInstance();
+
+                        DatePickerDialog dataPickerDialog = new DatePickerDialog(getContext(),datePickerDlgOnDataSet, now.get(Calendar.YEAR),now.get(Calendar.MONTH),now.get(Calendar.DAY_OF_MONTH));
+
+                        dataPickerDialog.setTitle("選擇日期");
+                        dataPickerDialog.setMessage("請選擇您的生日日期");
+                        dataPickerDialog.setCancelable(true);
+                        dataPickerDialog.show();
+
+                    }
+                });
+
+                btncancelbox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDlog01.dismiss();
+                    }
+                });
 
                 btnaddtargt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        adapter_exampler.addItem(edttargetname.getText().toString().trim());
-                        //mSyncTarget = edttargetname.getText().toString().trim();
+//                        adapter_exampler.addItem(edttargetname.getText().toString().trim());
 
-                        Toast.makeText(v.getContext(),
-                                "您新增了新的目標", Toast.LENGTH_SHORT).show();
+                        service_sync_todb = new service_sync_todb();
+                        service_sync_todb.execute();
 
-                        mDlog.dismiss();
+                        mDlog01.dismiss();
                     }
                 });
             }
         });
+
         return root;
+    }
+
+    private DatePickerDialog.OnDateSetListener datePickerDlgOnDataSet = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            edtaddtime.setText(
+                    String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(dayOfMonth)
+            );
+
+        }
+    };
+
+
+    public class service_sync_todb extends AsyncTask<String, String , String> {
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(getContext(),"您新增了新的目標並傳輸成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            //Toast.makeText(getContext(),"測試來了", Toast.LENGTH_SHORT).show();
+
+            if (connection!=null){
+
+                try{
+
+                    sync_name = gv.getUserEmail();
+                    statement = connection.createStatement();
+                    statement.executeQuery("INSERT INTO dbo.service (email,body,date) VALUES ('"+sync_name.toString().trim()+"','"+edttargetname.getText().toString().trim()+"','"+edtaddtime.getText().toString().trim()+"');");
+
+                }catch (Exception e){
+                    isSuccess = false;
+                    z = e.getMessage();
+                }
+            }
+            else {
+                Toast toast = Toast.makeText(getContext(),"目標數據傳輸失敗", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            return z;
+        }
+    }
+
+    public class service_sync_fromdb extends AsyncTask<String, String , String> {
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            if (connection!=null){
+                try{
+                    sync_name = gv.getUserEmail();
+                    statement = connection.createStatement();
+                    ResultSet result = statement.executeQuery("SELECT body, date FROM dbo.service WHERE email ='"+sync_name.toString().trim()+"';");
+                    ArrayList<String> array_sync01 = new ArrayList<String>();
+                    ArrayList<String> array_sync02 = new ArrayList<String>();
+                    while (result.next()) {
+                        array_sync01.add(result.getString(1).toString().trim());
+                        array_sync02.add(result.getString(2).toString().trim());
+                    }
+
+                    for (int i = 0; i < array_sync01.size(); i++) {
+                        listStr01.add((String) array_sync01.get(i));
+                        listStr02.add(array_sync02.get(i));
+                        listImg.add(R.drawable.legtrain);
+                    }
+
+                }catch (Exception e){
+                    isSuccess = false;
+                    z = e.getMessage();
+                }
+            }
+            else {
+                Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            return z;
+        }
+    }
+
+    public class service_delete_todb extends AsyncTask<String, String , String> {
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            if (connection!=null){
+                try{
+                    sync_name = gv.getUserEmail();
+                    statement = connection.createStatement();
+                    ResultSet result = statement.executeQuery("DELETE body FROM dbo.service WHERE email ='"+sync_name.toString().trim()+"' ;");
+                    ArrayList<String> array_sync01 = new ArrayList<String>();
+                    while (result.next()) {
+                        array_sync01.add(result.getString(1).toString().trim());
+                    }
+                    for (int i = 0; i < array_sync01.size(); i++) {
+                        listStr01.add((String) array_sync01.get(i));
+                        listImg.add(R.drawable.bg_07);
+                    }
+
+                }catch (Exception e){
+                    isSuccess = false;
+                    z = e.getMessage();
+                }
+            }
+            else {
+                Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            return z;
+        }
     }
 }

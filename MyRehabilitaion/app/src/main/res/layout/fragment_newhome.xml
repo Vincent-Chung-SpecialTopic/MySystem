@@ -24,7 +24,7 @@
             android:id="@+id/nav_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#A6C2CE"
+            android:background="#336699"
             app:itemIconTint="#ffffff"
             app:itemRippleColor="#ffffff"
             app:itemTextColor="#ffffff"

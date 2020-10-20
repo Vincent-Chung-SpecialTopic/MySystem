@@ -36,10 +36,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.myrehabilitaion.Class_Login;
 import com.example.myrehabilitaion.Class_Registeration;
+import com.example.myrehabilitaion.GlobalVariable;
 import com.example.myrehabilitaion.R;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -67,7 +70,13 @@ public class PersonalInfoFragment extends Fragment {
     private Connection connection = null;
 
     TextView psinfo_name;
+    TextView psinfo_email;
     Statement statement = null;
+
+    GlobalVariable gv;
+    String memail;
+    String mpasswd;
+
 //---------------------SQL---------------------
 
     ImageView bigPic ;
@@ -83,39 +92,55 @@ public class PersonalInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragement_personalinformationpage, container, false);
+
+
 //--------------------SQL--------------------
         ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
         psinfo_name = root.findViewById(R.id.psinfo_name);
+        psinfo_email = root.findViewById(R.id.psinfo_email);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+
         try {
             Class.forName(Classes);
             connection = DriverManager.getConnection(url, username,password);
-            psinfo_name.setText("SUCCESS");
+            Toast toast = Toast.makeText(getContext(),"Success", Toast.LENGTH_SHORT);
+            toast.show();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            psinfo_name.setText("ERROR");
+            Toast toast = Toast.makeText(getContext(),"ERROR", Toast.LENGTH_SHORT);
+            toast.show();
         } catch (SQLException e) {
             e.printStackTrace();
-            psinfo_name.setText("FAILURE");
+            Toast toast = Toast.makeText(getContext(),"FAILURE", Toast.LENGTH_SHORT);
+            toast.show();
+
         }
 
         if (connection!=null){
             try {
+                gv = (GlobalVariable)getActivity().getApplicationContext();
+                memail = gv.getUserEmail();
+                mpasswd = gv.getUserPassword();
+
                 statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("Select * from dbo.TEST_TABLE;");
-                while (resultSet.next()){
-                    psinfo_name.setText(resultSet.getString(1));
+                ResultSet resultSet01 = statement.executeQuery("SELECT username FROM dbo.registered WHERE email = '" + memail + "' AND password = '" + mpasswd + "';");
+                while (resultSet01.next()){
+                    psinfo_name.setText(resultSet01.getString(1).toString().trim());
                 }
-                Toast toast = Toast.makeText(getActivity(),"數據同步成功", Toast.LENGTH_SHORT);
-                toast.show();
+                ResultSet resultSet02 = statement.executeQuery("SELECT email FROM dbo.registered WHERE email = '" + memail + "' AND password = '" + mpasswd + "';");
+                while (resultSet02.next()){
+                    psinfo_email.setText(resultSet02.getString(1).toString().trim());
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         else {
-            psinfo_name.setText("Connection is null");
+            Toast toast = Toast.makeText(getActivity(),"connection is null", Toast.LENGTH_SHORT);
+            toast.show();
         }
  //--------------------SQL--------------------
 

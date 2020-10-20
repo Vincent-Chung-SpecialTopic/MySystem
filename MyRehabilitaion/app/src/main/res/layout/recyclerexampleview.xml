@@ -9,38 +9,18 @@
     app:cardBackgroundColor="#00FFFFFF"
     android:layout_gravity="center"
     android:layout_margin="5dp">
-<!--    <LinearLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@drawable/btn_design02"-->
-<!--        android:gravity="center"-->
-<!--        android:orientation="vertical"-->
-<!--        android:padding="0dp">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/img_target"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerInside" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/txt_target"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textColor="	#000000"-->
-<!--            android:textSize="20sp" />-->
 
 <!--    </LinearLayout>-->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/bg_02">
+        android:layout_height="200dp"
+        android:background = "@drawable/bg_07">
 
         <ImageView
             android:id="@+id/img_target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background = "@drawable/bg_07"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -51,7 +31,8 @@
             android:textAlignment="textEnd"
             android:textColor="	#ffffff"
             android:layout_margin="10dp"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="RtlCompat" />
     </FrameLayout>
 
 </androidx.cardview.widget.CardView>

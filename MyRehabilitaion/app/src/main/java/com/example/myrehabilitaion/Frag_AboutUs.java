@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class Frag_AboutUs extends Fragment {
 
-    private Class_AboutUsViewModel mViewModel;
 
     public static Frag_AboutUs newInstance() {
         return new Frag_AboutUs();
@@ -21,14 +20,8 @@ public class Frag_AboutUs extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_about_us, container, false);
-    }
+        View root =  inflater.inflate(R.layout.fragment_about_us, container, false);
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(Class_AboutUsViewModel.class);
-        // TODO: Use the ViewModel
+        return root;
     }
-
 }

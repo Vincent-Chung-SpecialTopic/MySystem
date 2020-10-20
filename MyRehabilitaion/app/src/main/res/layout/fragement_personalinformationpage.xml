@@ -4,59 +4,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_01"
-    android:foregroundGravity="center"
     tools:context="com.example.myrehabilitaion.ui.PersonalInfo.PersonalInfoFragment">
 
 
-    <ImageView
-        android:id="@+id/bigPic"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:padding="10dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/bg_round"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.123" />
-
-    <TextView
-        android:id="@+id/psinfo_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Vince"
-        android:textSize="48sp"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/bigPic"
-        app:layout_constraintStart_toStartOf="@+id/bigPic"
-        app:layout_constraintTop_toBottomOf="@+id/bigPic" />
-
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="330dp"
-        android:layout_height="180dp"
-        android:text="病歷資料"
-        android:textColor="#000000"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_05"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.564" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="330dp"
-        android:layout_height="180dp"
-        android:layout_marginTop="28dp"
-        android:text="看診紀錄"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/textView18"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/textView18"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:padding="5dp"
+            android:background="@drawable/bg_06"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/bigPic"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bg_round" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/psinfo_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="name"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/psinfo_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="e-mail"
+                    android:textSize="18sp"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="birthday"
+                    android:textSize="24sp"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_07"
+            android:padding="10dp"
+            android:text="病歷資料"
+            android:textColor="#111111" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:padding="10dp"
+            android:background="@drawable/bg_07"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="看診紀錄"
+            android:textColor="#111111" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.example.myrehabilitaion.ui.Stastics;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -30,6 +31,9 @@ public class Frag_Statistics extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_statistics, container, false);
+
+//        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+//        toolbar.setTitle("數據統計");
 
         BottomNavigationView bottomNav = root.findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(navListener);

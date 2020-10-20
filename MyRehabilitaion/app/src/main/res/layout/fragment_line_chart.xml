@@ -7,11 +7,10 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart1"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="#ffffff"/>
+        android:layout_height="250dp"
+        android:padding="10dp" />
     <TextView
         android:id="@+id/txtR"
-        android:background="@drawable/bg_01"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
@@ -21,9 +20,10 @@
 
     <ListView
         android:id="@+id/listViewRegion"
+        android:padding="10dp"
         android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/txtR"/>
 
 

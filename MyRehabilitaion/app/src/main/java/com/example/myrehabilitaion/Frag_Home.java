@@ -63,7 +63,7 @@ public class Frag_Home extends Fragment {
         recyclerexample = root.findViewById(R.id.recyclerview_home);
         recyclerexample.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL));
-        adapter_exampler = new RecyclerExampleViewAdapter(listStr,listImg);
+//        adapter_exampler = new RecyclerExampleViewAdapter(listStr,listImg);
         //adapter_home.addItem(sercmng.Syc());
 
 
@@ -85,7 +85,7 @@ public class Frag_Home extends Fragment {
                 btnaddtargt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        adapter_exampler.addItem(edttargetname.getText().toString().trim());
+//                        adapter_exampler.addItem(edttargetname.getText().toString().trim());
                         //mSyncTarget = edttargetname.getText().toString().trim();
 
                         Toast.makeText(v.getContext(),

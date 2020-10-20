@@ -3,14 +3,23 @@ package com.example.myrehabilitaion;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.net.MacAddress;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
@@ -29,6 +38,8 @@ public class Main extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
+        toolbar.setBackgroundColor(0xFF336699);
+//        toolbar.setLogo(R.drawable.new_logo);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
@@ -53,34 +64,18 @@ public class Main extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 */
-/*
-        mStatistics = new Statistics();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.nav_host_fragment, mStatistics, "Statistics Fragment")
-                .hide(mStatistics)
-                .commit();
- */
+
     }
-/*
-    public void showStatisticsFragment(){
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.scale_in_out,R.anim.fragment_fade_exit)
-                .show(mStatistics)
-                .commit();
-    }
- */
-/*
-    public void hideStatisticsFragmne(){
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fragment_fade_exit, R.anim.scale_in_out)
-                .hide(mStatistics)
-                .commit();
-    }
-*/
+
+    @SuppressLint("ResourceType")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.item_instruction, menu);
+
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.side_drawer, menu);
+        inflater.inflate(R.menu.side_drawer, menu);
         return true;
     }
 
@@ -93,8 +88,25 @@ public class Main extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+
+
         if(mDrawerToggle.onOptionsItemSelected(item)){
             return true;
+        }else{
+            switch (item.getItemId()) {
+                case R.id.item_instruct:
+                    Dialog mDlog_case = new Dialog(this);
+                    mDlog_case.setContentView(R.layout.page_instruction);
+                    mDlog_case.setCancelable(true);
+                    mDlog_case.show();
+                    return true;
+                case R.id.menuItemExit:
+                    Intent intent = new Intent(Main.this, Class_Login.class);
+                    startActivity(intent);
+                    return true;
+                default:
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

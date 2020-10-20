@@ -5,8 +5,11 @@
     android:id="@+id/linearLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_01"
+    android:background="@drawable/bg_05"
     tools:context="com.example.myrehabilitaion.Frag_Home">
+
+
+
 
     <!--    <androidx.viewpager.widget.ViewPager-->
     <!--        android:id="@+id/viewpager"-->
@@ -26,9 +29,9 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:clickable="true"
         android:foreground="@drawable/add"
-        app:backgroundTint="#99cc99"
+        android:scaleType="centerCrop"
+        app:backgroundTint="#A6C2CE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.881"
@@ -40,18 +43,11 @@
         android:id="@+id/recyclerview_home"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#00FFFFFF"
+        android:padding="10dp"
+        android:background="@drawable/bg_07"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--    <Button-->
-    <!--        android:id="@+id/btn_addcase"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:background="@drawable/btn_design07"-->
-    <!--        android:text="新增目標" />-->
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
