@@ -38,14 +38,15 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="部位"
+                android:text="正在紀錄..."
                 android:textAlignment="center"
-                android:textSize="36sp" />
+                android:textSize="32sp" />
 
             <TextView
+                android:id="@+id/body_startrecord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="腳踝"
+                android:text="部位"
                 android:textAlignment="center"
                 android:textSize="60sp" />
         </LinearLayout>

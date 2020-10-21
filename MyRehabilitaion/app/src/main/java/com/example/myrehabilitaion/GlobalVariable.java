@@ -16,7 +16,6 @@ public class GlobalVariable extends Application {
     }
     public void setServiceName(String servicename){ this.ServiceName = servicename; }
 
-
     //取得 變數值
     public String getUserEmail() {
         return Email;
@@ -25,4 +24,5 @@ public class GlobalVariable extends Application {
         return Password;
     }
     public String getServiceName(){return ServiceName; }
+
 }

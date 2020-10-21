@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,8 +79,11 @@ public class RecordFragment extends Fragment {
     service_sync_fromdb service_sync_fromdb;
 
     public String sync_name;
+    public String sync_servicename;
 
     GlobalVariable gv ;
+
+
 
 
     private RecyclerInfoAdapter infoadapter;
@@ -119,6 +123,9 @@ public class RecordFragment extends Fragment {
         listStr03 = new ArrayList<String>();
         listImg = new ArrayList<Integer>();
 
+        service_sync_fromdb = new service_sync_fromdb();
+        service_sync_fromdb.execute();
+
 //        for( int i=0 ; i <3 ; i++){
 //            listStr.add(new String("目標" + String.valueOf(i+1)));
 //        }
@@ -128,10 +135,8 @@ public class RecordFragment extends Fragment {
         recyclerexample.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
 
-        service_sync_fromdb = new service_sync_fromdb();
-        service_sync_fromdb.execute();
 
-        adapter_exampler = new RecyclerExampleViewAdapter(listStr01, listStr02, listImg);
+        adapter_exampler = new RecyclerExampleViewAdapter(RecordFragment.super.getActivity(),RecordFragment.super.getActivity().getApplicationContext(), listStr01, listStr02, listImg);
         //adapter_home.addItem(sercmng.Syc());
 
         recyclerexample.setAdapter(adapter_exampler);
@@ -347,7 +352,6 @@ public class RecordFragment extends Fragment {
             if (connection!=null){
 
                 try{
-
                     sync_name = gv.getUserEmail();
                     statement = connection.createStatement();
                     statement.executeQuery("INSERT INTO dbo.service (email,body,date) VALUES ('"+sync_name.toString().trim()+"','"+edttargetname.getText().toString().trim()+"','"+edtaddtime.getText().toString().trim()+"');");
@@ -370,6 +374,7 @@ public class RecordFragment extends Fragment {
         String z = "";
         Boolean isSuccess = false;
 
+
         @Override
         protected void onPreExecute() {
         }
@@ -383,28 +388,38 @@ public class RecordFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
+            ArrayList<String> array_sync01 = new ArrayList<String>();
+            ArrayList<String> array_sync02 = new ArrayList<String>();
+            sync_name = gv.getUserEmail();
+
             if (connection!=null){
+                Log.d("vin123", "抓資料");
                 try{
-                    sync_name = gv.getUserEmail();
                     statement = connection.createStatement();
                     ResultSet result = statement.executeQuery("SELECT body, date FROM dbo.service WHERE email ='"+sync_name.toString().trim()+"';");
-                    ArrayList<String> array_sync01 = new ArrayList<String>();
-                    ArrayList<String> array_sync02 = new ArrayList<String>();
+                    Log.d("vin456", String.valueOf(result));
+
                     while (result.next()) {
                         array_sync01.add(result.getString(1).toString().trim());
                         array_sync02.add(result.getString(2).toString().trim());
+                        Log.d("vin789", String.valueOf(array_sync01));
                     }
-
                     for (int i = 0; i < array_sync01.size(); i++) {
                         listStr01.add((String) array_sync01.get(i));
                         listStr02.add(array_sync02.get(i));
-                        listImg.add(R.drawable.legtrain);
+                        double r =Math.random()*3;
+                        int image[]  = {R.drawable.bg_04, R.drawable.bg_03, R.drawable.bg_07};
+                        listImg.add(image[Integer.valueOf((int) r)]);
                     }
-
+                    Log.d("abcd", String.valueOf(listStr01));
                 }catch (Exception e){
+
+                    Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
+                    toast.show();
                     isSuccess = false;
                     z = e.getMessage();
                 }
+
             }
             else {
                 Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
@@ -414,48 +429,42 @@ public class RecordFragment extends Fragment {
         }
     }
 
-    public class service_delete_todb extends AsyncTask<String, String , String> {
-
-        String z = "";
-        Boolean isSuccess = false;
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            if (connection!=null){
-                try{
-                    sync_name = gv.getUserEmail();
-                    statement = connection.createStatement();
-                    ResultSet result = statement.executeQuery("DELETE body FROM dbo.service WHERE email ='"+sync_name.toString().trim()+"' ;");
-                    ArrayList<String> array_sync01 = new ArrayList<String>();
-                    while (result.next()) {
-                        array_sync01.add(result.getString(1).toString().trim());
-                    }
-                    for (int i = 0; i < array_sync01.size(); i++) {
-                        listStr01.add((String) array_sync01.get(i));
-                        listImg.add(R.drawable.bg_07);
-                    }
-
-                }catch (Exception e){
-                    isSuccess = false;
-                    z = e.getMessage();
-                }
-            }
-            else {
-                Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            return z;
-        }
-    }
+//    public class service_delete_todb extends AsyncTask<String, String , String> {
+//
+//        String z = "";
+//        Boolean isSuccess = false;
+//
+//        @Override
+//        protected void onPreExecute() {
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//        @Override
+//        protected String doInBackground(String... strings) {
+//
+//            if (connection!=null){
+//                try{
+//                    sync_name = gv.getUserEmail();
+//                    sync_servicename = gv.getServiceName();
+//                    statement = connection.createStatement();
+//                    statement.executeQuery("DELETE * FROM dbo.service WHERE email ='"+sync_name.toString().trim()+"' AND '"+sync_servicename.toString().trim()+ "' ;");
+//
+//
+//                }catch (Exception e){
+//                    isSuccess = false;
+//                    z = e.getMessage();
+//                }
+//            }
+//            else {
+//                Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
+//                toast.show();
+//            }
+//            return z;
+//        }
+//    }
 }

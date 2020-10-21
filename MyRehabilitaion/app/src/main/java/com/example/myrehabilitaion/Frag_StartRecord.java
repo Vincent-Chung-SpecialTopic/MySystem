@@ -13,16 +13,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.myrehabilitaion.Main;
 import com.example.myrehabilitaion.R;
 import com.example.myrehabilitaion.RecordMain;
 import com.example.myrehabilitaion.Variables;
 
+import org.w3c.dom.Text;
+
 public class Frag_StartRecord extends Fragment {
     Button mbtnconfirmstart, mbtncancelstart;
     private static Variables Variables = new Variables();
+    TextView body_startrecord;
     Dialog mDlog;
+
+    GlobalVariable gv;
 
     private NumberPicker mNumPickerAge;
 
@@ -35,6 +41,9 @@ public class Frag_StartRecord extends Fragment {
         mNumPickerAge.setMaxValue(200);
         mNumPickerAge.setMinValue(0);
         mNumPickerAge.setValue(18);
+
+        body_startrecord = root.findViewById(R.id.body_startrecord);
+        body_startrecord.setText(gv.getServiceName().toString().trim());
 
         mbtnconfirmstart = root.findViewById(R.id.btn_confirmstart);
         mbtncancelstart = root.findViewById(R.id.btn_cancelstartpage);

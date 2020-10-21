@@ -1,10 +1,21 @@
 package com.example.myrehabilitaion;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.text.Layout;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,25 +28,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myrehabilitaion.ui.Record.RecordFragment;
+
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExampleViewAdapter.ViewHolder>{
+public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExampleViewAdapter.ViewHolder> {
 
     private List<String> mListString01 = new ArrayList<String>();
     private List<String> mListString02 = new ArrayList<String>();
     private List<String> mListString03 = new ArrayList<String>();
     private List<Integer> mListImage = new ArrayList<Integer>();
 
-    GlobalVariable gv;
     Dialog mDlog_case;
     TextView updatetargetname;
     TextView updatetargetaddtime;
     TextView updatetargetfinishtime;
+    Context context;
+    Activity activity;
 
     public void addItem(String text01, String text02) {
         // 為了示範效果，固定新增在位置3。若要新增在最前面就把3改成0
@@ -58,15 +76,14 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
     }
 
-
-
-
     // 刪除項目
     public void removeItem(int position){
+        service_delete_todb service_delete_todb = new service_delete_todb();
+        service_delete_todb.execute();
+
         mListString01.remove(position);
         notifyItemRemoved(position);
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView mImgView;
@@ -75,6 +92,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             mImgView = (ImageView) itemView.findViewById(R.id.img_target);
             mTxt = (TextView) itemView.findViewById(R.id.txt_target);
             // 處理按下的事件。
@@ -92,6 +110,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
                     updatetargetname.setText(mListString01.get(getAdapterPosition()).toString().trim());
                     updatetargetaddtime =mDlog_case.findViewById(R.id.edt_date);
                     updatetargetaddtime.setText(mListString02.get(getAdapterPosition()).toString().trim());
+
 //                    updatetargetfinishtime = mDlog_case.findViewById(R.id.txt_targetdate);
 //                    updatetargetfinishtime.setText(mListString03.get(getAdapterPosition()).toString().trim());
                     //------------------設定dlg目標部位名稱------------------------
@@ -134,18 +153,24 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
         @Override
         public void onClick(View v) {
+            GlobalVariable gv = (GlobalVariable) v.getContext().getApplicationContext();
+            gv.setServiceName(mListString01.get(getAdapterPosition()).toString().trim());
+
             Intent intent = new Intent(v.getContext(),RecordMain.class);
             v.getContext().startActivity(intent);
         }
     }
 
     // 建構式，用來接收外部程式傳入的項目資料。
-    public RecyclerExampleViewAdapter(List<String> listString01, List<String> listString02, List<Integer> listImg) {
+    public RecyclerExampleViewAdapter(Activity activity,Context context, List<String> listString01, List<String> listString02, List<Integer> listImg) {
 
         mListString01 = listString01;
         mListString02 =listString02;
 //        mListString03 = listString03;
         mListImage = listImg;
+        this.context=context;
+        this.activity = activity;
+        Log.d("chris111", String.valueOf(mListString02));
     }
 
     // RecyclerView會呼叫這個方法，我們必須建立好項目的ViewHolder物件，
@@ -154,8 +179,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
     @Override
     public RecyclerExampleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         // 建立一個 view。
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(
-                R.layout.recyclerexampleview, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerexampleview, viewGroup, false);
 
         // 建立這個 view 的 ViewHolder。
         RecyclerExampleViewAdapter.ViewHolder viewHolder = new RecyclerExampleViewAdapter.ViewHolder(v);
@@ -163,19 +187,109 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
     }
 
     // RecyclerView會呼叫這個方法，我們必須把項目資料填入ViewHolder物件。
-
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerExampleViewAdapter.ViewHolder viewHolder, int i) {
         // 把資料設定給 ViewHolder。
+
         viewHolder.mImgView.setImageResource(mListImage.get(i));
+        Log.d("vincent111", String.valueOf(mListString01));
         viewHolder.mTxt.setText(mListString01.get(i).toString().trim());
     }
-
+public static int i=0;
     // RecyclerView會呼叫這個方法，我們要傳回總共有幾個項目。
     @Override
     public int getItemCount() {
+        Log.d("vincent87", String.valueOf(mListString01.size()));
+        Log.d("vincent1021", String.valueOf(i));
+        if(mListString01.size()==0){
+            getItemCount();
+        }
+//        for(i =0;i<10;i++){
+//            if(mListString01.size()==0){
+//                getItemCount();
+//            }
+//            else if(mListString01.size()>0){
+//                break;
+//            }
+//        }
+
+        //Log.d("vincentCount02", String.valueOf(count));
+        //count=0;
         return mListString01.size();
+    }
+
+    public class service_delete_todb  extends AsyncTask<String, String , String> {
+
+        private  String ip = "140.131.114.241";
+        private  String port = "1433";
+        private  String Classes = "net.sourceforge.jtds.jdbc.Driver";
+        private  String database = "109-rehabilitation";
+        private  String username = "case210906";
+        private  String password = "1@case206";
+        private  String url = "jdbc:jtds:sqlserver://"+ip+":"+port+"/"+database;
+
+        private Connection connection = null;
+
+        Statement statement = null;
+
+        public String sync_name;
+        public String sync_servicename;
+
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            try {
+                Class.forName(Classes);
+                connection = DriverManager.getConnection(url, username,password);
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+
+            } catch (
+                    SQLException e) {
+                e.printStackTrace();
+
+            }
+            GlobalVariable gv = (GlobalVariable) context.getApplicationContext();
+
+            if (connection!=null){
+                try{
+
+                    sync_name = gv.getUserEmail();
+                    sync_servicename = gv.getServiceName();
+                    statement = connection.createStatement();
+                    statement.executeQuery("DELETE FROM dbo.service WHERE email ='"+sync_name.toString().trim()+"' AND body ='"+sync_servicename.toString().trim()+ "' ;");
+
+
+                }catch (Exception e){
+                    isSuccess = false;
+                    z = e.getMessage();
+                }
+            }
+            else {
+            }
+            return z;
+        }
     }
 
 }
