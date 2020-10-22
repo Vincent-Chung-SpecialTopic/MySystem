@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -37,6 +39,7 @@ import com.example.myrehabilitaion.RecyclerInfoAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.lang.ref.WeakReference;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -48,8 +51,19 @@ import java.util.List;
 import java.util.Random;
 
 public class RecordFragment extends Fragment {
-
-
+//    private static class StaticHandler extends Handler{
+//        private final WeakReference <RecordFragment> mRecordFragment;
+//        public StaticHandler(RecordFragment recordFragment){
+//            mRecordFragment = new WeakReference<RecordFragment>(recordFragment);
+//        }
+//    }
+//
+//    Runnable r = new Runnable() {
+//        @Override
+//        public void run() {
+//
+//        }
+//    }
     private static String ip = "140.131.114.241";
     private static String port = "1433";
     private static String Classes = "net.sourceforge.jtds.jdbc.Driver";
@@ -83,6 +97,8 @@ public class RecordFragment extends Fragment {
 
     GlobalVariable gv ;
 
+    ProgressBar progressBar;
+
 
 
 
@@ -91,6 +107,11 @@ public class RecordFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_frag__record, container, false);
+
+        listStr01 = new ArrayList<String>();
+        listStr02 = new ArrayList<String>();
+        listStr03 = new ArrayList<String>();
+        listImg = new ArrayList<Integer>();
 
         gv = (GlobalVariable)getActivity().getApplicationContext();
 
@@ -113,31 +134,31 @@ public class RecordFragment extends Fragment {
             toast.show();
 
         }
+        service_sync_fromdb = new service_sync_fromdb();
+        service_sync_fromdb.execute();
 
 
 //        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
 //        toolbar.setTitle("診療中的項目");
 
-        listStr01 = new ArrayList<String>();
-        listStr02 = new ArrayList<String>();
-        listStr03 = new ArrayList<String>();
-        listImg = new ArrayList<Integer>();
-
-        service_sync_fromdb = new service_sync_fromdb();
-        service_sync_fromdb.execute();
 
 //        for( int i=0 ; i <3 ; i++){
 //            listStr.add(new String("目標" + String.valueOf(i+1)));
 //        }
 
-
         recyclerexample = root.findViewById(R.id.recyclerview_home);
         recyclerexample.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
 
-
         adapter_exampler = new RecyclerExampleViewAdapter(RecordFragment.super.getActivity(),RecordFragment.super.getActivity().getApplicationContext(), listStr01, listStr02, listImg);
         //adapter_home.addItem(sercmng.Syc());
+
+        try {
+            Thread.sleep(100);
+            System.out.print("    執行緒睡眠0.01秒！\n");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         recyclerexample.setAdapter(adapter_exampler);
 
@@ -402,7 +423,6 @@ public class RecordFragment extends Fragment {
                     while (result.next()) {
                         array_sync01.add(result.getString(1).toString().trim());
                         array_sync02.add(result.getString(2).toString().trim());
-                        Log.d("vin789", String.valueOf(array_sync01));
                     }
                     for (int i = 0; i < array_sync01.size(); i++) {
                         listStr01.add((String) array_sync01.get(i));
@@ -411,7 +431,7 @@ public class RecordFragment extends Fragment {
                         int image[]  = {R.drawable.bg_04, R.drawable.bg_03, R.drawable.bg_07};
                         listImg.add(image[Integer.valueOf((int) r)]);
                     }
-                    Log.d("abcd", String.valueOf(listStr01));
+                    Log.d("text02", String.valueOf(listStr01));
                 }catch (Exception e){
 
                     Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);

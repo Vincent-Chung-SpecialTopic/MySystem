@@ -43,10 +43,10 @@ import java.util.List;
 
 public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExampleViewAdapter.ViewHolder> {
 
-    private List<String> mListString01 = new ArrayList<String>();
-    private List<String> mListString02 = new ArrayList<String>();
-    private List<String> mListString03 = new ArrayList<String>();
-    private List<Integer> mListImage = new ArrayList<Integer>();
+    private List<String> mListString01;
+    private List<String> mListString02;
+    private List<String> mListString03 ;
+    private List<Integer> mListImage;
 
     Dialog mDlog_case;
     TextView updatetargetname;
@@ -71,10 +71,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 //        notifyDataSetChanged();//刷新版列表权
 //    }
 
-    public void syncdlgItem(int position){
 
-
-    }
 
     // 刪除項目
     public void removeItem(int position){
@@ -85,6 +82,18 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
         notifyItemRemoved(position);
     }
 
+    // 建構式，用來接收外部程式傳入的項目資料。
+    public RecyclerExampleViewAdapter(Activity activity,Context context, List<String> listString01, List<String> listString02, List<Integer> listImg) {
+
+        this.mListString01 =  listString01;
+        this.mListString02 =  listString02;
+//        mListString03 = listString03;
+        this.mListImage =  listImg;
+        this.context=context;
+        this.activity = activity;
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView mImgView;
         public TextView mTxt;
@@ -92,6 +101,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
         public ViewHolder(View itemView) {
             super(itemView);
+
 
             mImgView = (ImageView) itemView.findViewById(R.id.img_target);
             mTxt = (TextView) itemView.findViewById(R.id.txt_target);
@@ -107,9 +117,9 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
                     //------------------設定dlg目標部位名稱、建立時間、完成時間------------------------
                     updatetargetname = mDlog_case.findViewById(R.id.edt_updatetargetname);
-                    updatetargetname.setText(mListString01.get(getAdapterPosition()).toString().trim());
+                    updatetargetname.setText(mListString01.get(getAdapterPosition()));
                     updatetargetaddtime =mDlog_case.findViewById(R.id.edt_date);
-                    updatetargetaddtime.setText(mListString02.get(getAdapterPosition()).toString().trim());
+                    updatetargetaddtime.setText(mListString02.get(getAdapterPosition()));
 
 //                    updatetargetfinishtime = mDlog_case.findViewById(R.id.txt_targetdate);
 //                    updatetargetfinishtime.setText(mListString03.get(getAdapterPosition()).toString().trim());
@@ -154,24 +164,13 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
         @Override
         public void onClick(View v) {
             GlobalVariable gv = (GlobalVariable) v.getContext().getApplicationContext();
-            gv.setServiceName(mListString01.get(getAdapterPosition()).toString().trim());
+            gv.setServiceName(mListString01.get(getAdapterPosition()));
 
             Intent intent = new Intent(v.getContext(),RecordMain.class);
             v.getContext().startActivity(intent);
         }
     }
 
-    // 建構式，用來接收外部程式傳入的項目資料。
-    public RecyclerExampleViewAdapter(Activity activity,Context context, List<String> listString01, List<String> listString02, List<Integer> listImg) {
-
-        mListString01 = listString01;
-        mListString02 =listString02;
-//        mListString03 = listString03;
-        mListImage = listImg;
-        this.context=context;
-        this.activity = activity;
-        Log.d("chris111", String.valueOf(mListString02));
-    }
 
     // RecyclerView會呼叫這個方法，我們必須建立好項目的ViewHolder物件，
     // 然後傳回給RecyclerView。
@@ -190,20 +189,18 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
     @Override
     public void onBindViewHolder(@NonNull RecyclerExampleViewAdapter.ViewHolder viewHolder, int i) {
         // 把資料設定給 ViewHolder。
-
         viewHolder.mImgView.setImageResource(mListImage.get(i));
-        Log.d("vincent111", String.valueOf(mListString01));
-        viewHolder.mTxt.setText(mListString01.get(i).toString().trim());
+        viewHolder.mTxt.setText(mListString01.get(i));
+
     }
-public static int i=0;
+
     // RecyclerView會呼叫這個方法，我們要傳回總共有幾個項目。
     @Override
     public int getItemCount() {
-        Log.d("vincent87", String.valueOf(mListString01.size()));
-        Log.d("vincent1021", String.valueOf(i));
-        if(mListString01.size()==0){
-            getItemCount();
-        }
+
+//        if(mListString01.size()==0){
+//            getItemCount();
+//        }
 //        for(i =0;i<10;i++){
 //            if(mListString01.size()==0){
 //                getItemCount();
@@ -215,7 +212,12 @@ public static int i=0;
 
         //Log.d("vincentCount02", String.valueOf(count));
         //count=0;
-        return mListString01.size();
+
+//        Log.d("text01", String.valueOf(mListString01));
+//        Log.d("text01", String.valueOf(mListString01.size()));
+        Log.d("test08", String.valueOf(this.mListImage));
+
+        return this.mListString01.size();
     }
 
     public class service_delete_todb  extends AsyncTask<String, String , String> {
@@ -241,7 +243,6 @@ public static int i=0;
 
         @Override
         protected void onPreExecute() {
-
 
         }
 
