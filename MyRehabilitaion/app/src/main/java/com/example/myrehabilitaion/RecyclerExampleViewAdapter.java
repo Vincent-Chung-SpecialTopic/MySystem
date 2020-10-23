@@ -210,13 +210,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 //            }
 //        }
 
-        //Log.d("vincentCount02", String.valueOf(count));
-        //count=0;
-
-//        Log.d("text01", String.valueOf(mListString01));
 //        Log.d("text01", String.valueOf(mListString01.size()));
-        Log.d("test08", String.valueOf(this.mListImage));
-
         return this.mListString01.size();
     }
 
