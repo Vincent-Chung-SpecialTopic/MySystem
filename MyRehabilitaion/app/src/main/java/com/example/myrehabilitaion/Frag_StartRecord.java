@@ -22,10 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myrehabilitaion.Main;
-import com.example.myrehabilitaion.R;
-import com.example.myrehabilitaion.RecordMain;
-import com.example.myrehabilitaion.Variables;
 
 import org.w3c.dom.Text;
 
@@ -173,9 +169,10 @@ public class Frag_StartRecord extends Fragment {
                 try{
                     String sync_name = gv.getUserEmail();
                     String sync_servicename = gv.getServiceName();
+                    String sunc_casename = gv.getCaseName();
 
                     statement = connection.createStatement();
-                    statement.executeQuery("INSERT INTO dbo.Case_data (email,body,body,times) VALUES ('"+sync_name.toString().trim()+"','"+sync_servicename.toString().trim()+"','" + edtaddtime.getText().toString().trim()+"');");
+                    statement.executeQuery("INSERT INTO dbo.Case_data (email,body,body,times) VALUES ('"+sync_name.toString().trim()+"','"+sync_servicename.toString().trim()+"','" + sunc_casename.toString().trim()+"');");
 
                 }catch (Exception e){
                     isSuccess = false;
