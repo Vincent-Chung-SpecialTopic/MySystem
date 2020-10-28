@@ -1,4 +1,4 @@
-package com.example.myrehabilitaion;
+package com.example.myrehabilitaion.ui.Stastics;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myrehabilitaion.GlobalVariable;
+import com.example.myrehabilitaion.R;
+import com.example.myrehabilitaion.ui.Record.RecordFragment;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -42,57 +47,82 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 
+import org.w3c.dom.Text;
+
+import java.lang.ref.WeakReference;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class Frag_LineChart extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
 
-    private LineChart chart;
+    private static class StaticHandler extends Handler {
+        private final WeakReference<Frag_LineChart> mLineFragment;
+        public StaticHandler(Frag_LineChart lineFragment){
+            mLineFragment = new WeakReference<Frag_LineChart>(lineFragment);
+        }
+    }
 
-    private TextView mTxtR;
-    private ListView mListViewRegion;
+    public final Frag_LineChart.StaticHandler mHandler =new Frag_LineChart.StaticHandler(this);
 
+    protected static String ip = "140.131.114.241";
+    protected static String port = "1433";
+    protected static String Classes = "net.sourceforge.jtds.jdbc.Driver";
+    protected static String database = "109-rehabilitation";
+    protected static String username = "case210906";
+    protected static String password = "1@case206";
+    protected static String url = "jdbc:jtds:sqlserver://"+ip+":"+port+"/"+database;
 
-    private static String ip = "140.131.114.241";
-    private static String port = "1433";
-    private static String Classes = "net.sourceforge.jtds.jdbc.Driver";
-    private static String database = "109-rehabilitation";
-    private static String username = "case210906";
-    private static String password = "1@case206";
-    private static String url = "jdbc:jtds:sqlserver://"+ip+":"+port+"/"+database;
-
-    private Connection connection = null;
+    protected Connection connection = null;
 
     Statement statement = null;
 
     GlobalVariable gv ;
+    String userid;
+    String serviceid;
 
-    public List<String> listStr01;
-    public List<String> listStr02;
-    public List<String> xValue;
-    public List<String> listStr04;
+    protected List<Integer> listStr01 = new ArrayList<Integer>();
+    protected List<String> listStr02 = new ArrayList<String>();
+    protected List<String> listStr03 = new ArrayList<String>();
+    protected List<String> xValue = new ArrayList<String>();
+    protected List<String> listStr04 = new ArrayList<String>();
+    protected List<String> listStr05 = new ArrayList<String>();
+
+
+
 
     String sInfo;
 
-    linedata_sync_fromdb linedata_sync_fromdb;
-    ArrayAdapter<String> spinnerArrayAdapter;
+    protected LineChart chart;
+    chartdata_sync_fromdb chartdataSyncFromdb;
+    spinnerdata_sync_fromdb spinnerdataSyncFromdb;
+
+    String sync_serviceid;
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
-        View root = inflater.inflate(R.layout.fragment_line_chart, container, false);
+        final View root = inflater.inflate(R.layout.fragment_line_chart, container, false);
 
-        listStr01 = new ArrayList<String>();
-        listStr02 = new ArrayList<String>();
-        xValue = new ArrayList<String>();
-        listStr04 = new ArrayList<String>();
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        };
+
+
+        chart = root.findViewById(R.id.chart1);
+        chart.setOnChartValueSelectedListener(this);
 
         gv = (GlobalVariable)getActivity().getApplicationContext();
 
@@ -113,11 +143,12 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             e.printStackTrace();
             Toast toast = Toast.makeText(getContext(),"FAILURE", Toast.LENGTH_SHORT);
             toast.show();
+
         }
 
+        spinnerdataSyncFromdb = new spinnerdata_sync_fromdb();
+        spinnerdataSyncFromdb.execute();
 
-        linedata_sync_fromdb =new linedata_sync_fromdb();
-        linedata_sync_fromdb.execute();
 
         try {
             Thread.sleep(100);
@@ -126,43 +157,63 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             e.printStackTrace();
         }
 
+        final List<String> bodypart_list=new ArrayList<String>();
+        for(int i=0; i<listStr04.size(); i++){
+            bodypart_list.add(listStr04.get(i));
+        }
 
 
-//        Spinner spinner =root.findViewById(R.id.spinner);
-//        spinnerArrayAdapter = new ArrayAdapter<String>(getContext(),  android.R.layout.simple_spinner_item, listStr04);
-//        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
-//        spinner.setAdapter(spinnerArrayAdapter);
-//        spinner.setOnItemClickListener((AdapterView.OnItemClickListener) spnOnItemSelected);
+        Spinner spnbody = root.findViewById(R.id.spinner);
 
-        // Application of the Array to the Spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, bodypart_list);
+        spnbody.setAdapter(adapter);
 
-        chart = root.findViewById(R.id.chart1);
-        chart.setOnChartValueSelectedListener(this);
+        spnbody.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "您選擇了:" + bodypart_list.get(position), Toast.LENGTH_SHORT).show();
+                sync_serviceid = listStr05.get(position);
+
+                listStr01 = new ArrayList<Integer>();
+                listStr02 = new ArrayList<String>();
+                listStr03 = new ArrayList<String>();
+
+                chartdataSyncFromdb =new chartdata_sync_fromdb();
+                chartdataSyncFromdb.execute();
+
+                try {
+                    Thread.sleep(100);
+                    System.out.print("    執行緒睡眠0.01秒！\n");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
 //------------------------------------------建立數據------------------------------------------
-        ArrayList<Entry> values01 = new ArrayList<>();
+                ArrayList<Entry> values01 = new ArrayList<>();
 
-        for(int i=0;i < listStr02.size();i++){
+                for(int i= 0;i<10 ;i++){
+                    values01.add(new Entry(i,listStr01.get(i)));
+                }
+
+                ArrayList<Entry> values02 = new ArrayList<>();
+
+//        for(int i=0;i < listStr02.size();i++){
 //            values01.add(new Entry(Integer.valueOf(listStr02.get(i)), Integer.valueOf(listStr01.get(i))));
-        }
+//        }
 
-        ArrayList<Entry> values02 = new ArrayList<>();
+                // greenLine
+                ArrayList<Entry> values01_end = new ArrayList<>();
+                values01_end.add(new Entry(9, listStr01.get(9)));
 
-        for(int i=0;i < listStr02.size();i++){
-//            values01.add(new Entry(Integer.valueOf(listStr02.get(i)), Integer.valueOf(listStr01.get(i))));
+                //yellowLine
+                ArrayList<Entry> values02_end = new ArrayList<>();
+//        values02_end.add(new Entry(Integer.valueOf(str), Integer.valueOf(10)));
 
-        }
-
-        // greenLine
-        ArrayList<Entry> values01_end = new ArrayList<>();
-//        values01_end.add(new Entry(Integer.valueOf(listStr02.get(listStr02.size()))-1, Integer.valueOf(listStr01.get(listStr01.size()-1))));
-//yellowLine
-        ArrayList<Entry> values02_end = new ArrayList<>();
-//        values02_end.add(new Entry(Integer.valueOf(listStr02.get(listStr02.size()))-1, Integer.valueOf(listStr01.get(listStr01.size()-1))));
-
-//        initX();
-//        initY();
-//        initDataSet(values01, values02, values01_end, values02_end);
-//        initChartFormat();
+                initX();
+                initY();
+                initDataSet(values01, values02, values01_end, values02_end);
+                initChartFormat();
 
 //        LineDataSet d = new LineDataSet(dataSet01, "DataSet01" );
 //        d.setLineWidth(2.5f);
@@ -212,17 +263,144 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
 //        l.setOrientation(Legend.LegendOrientation.VERTICAL);
 //        l.setDrawInside(false);
 
+                final TextView txth = root.findViewById(R.id.txtH);
+                final TextView txth01 = root.findViewById(R.id.txth01);
+                final TextView txth02 = root.findViewById(R.id.txth02);
+                final TextView txth03 = root.findViewById(R.id.txth03);
+                final TextView txth01_1 = root.findViewById(R.id.txth01_1);
+                final TextView txth02_2 = root.findViewById(R.id.txth02_2);
+                final TextView txth03_3 = root.findViewById(R.id.txth03_3);
 
-        mTxtR = root.findViewById(R.id.txtR);
-        mListViewRegion = root.findViewById(R.id.listViewRegion);
-        ArrayAdapter<CharSequence> arrAdapRegion
-                = ArrayAdapter.createFromResource(getActivity().getApplication(),
-                R.array.region_list,
-                android.R.layout.simple_list_item_1);
-        mListViewRegion.setAdapter(arrAdapRegion);
-        mListViewRegion.setOnItemClickListener(listViewRegionOnItemClick);
+                txth.setText("近期復健紀錄");
+                txth01.setText("日期");
+                txth02.setText("復健部位");
+                txth03.setText("達成(次)");
+                txth01_1.setText("");
+                txth02_2.setText("");
+                txth03_3.setText("");
+
+                for (int j = 9; j >-1 ; j--){
+                    txth01_1.append( listStr02.get(j) + "\n");
+                    txth02_2.append(listStr03.get(j) + "\n");
+                    txth03_3.append(String.valueOf(listStr01.get(j) + "\n"));
+                }
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        sync_serviceid =listStr05.get(0);
+
+        chartdataSyncFromdb =new chartdata_sync_fromdb();
+        chartdataSyncFromdb.execute();
+
+        try {
+            Thread.sleep(100);
+            System.out.print("    執行緒睡眠0.01秒！\n");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+//------------------------------------------建立數據------------------------------------------
+        ArrayList<Entry> values01 = new ArrayList<>();
+
+        for(int i= 0;i<10 ;i++){
+            values01.add(new Entry(i,listStr01.get(i)));
+        }
+
+        ArrayList<Entry> values02 = new ArrayList<>();
+
+//        for(int i=0;i < listStr02.size();i++){
+//            values01.add(new Entry(Integer.valueOf(listStr02.get(i)), Integer.valueOf(listStr01.get(i))));
+//        }
+
+        // greenLine
+        ArrayList<Entry> values01_end = new ArrayList<>();
+        values01_end.add(new Entry(9, listStr01.get(9)));
+
+        //yellowLine
+        ArrayList<Entry> values02_end = new ArrayList<>();
+//        values02_end.add(new Entry(Integer.valueOf(str), Integer.valueOf(10)));
+
+        initX();
+        initY();
+        initDataSet(values01, values02, values01_end, values02_end);
+        initChartFormat();
+
+//        LineDataSet d = new LineDataSet(dataSet01, "DataSet01" );
+//        d.setLineWidth(2.5f);
+//        d.setCircleRadius(4f);
+
+//        int z = Integer.valueOf((int) ((Math.random() * 3) + 3));
+//        int color = colors[z % colors.length];
+//        d.setColor(color);
+//        d.setCircleColor(color);
+//
+//        // make the first DataSet dashed
+//        ((LineDataSet) d).enableDashedLine(10, 10, 0);
+//        ((LineDataSet) d).setColors(ColorTemplate.VORDIPLOM_COLORS);
+//        ((LineDataSet) d).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
+//
+//        LineData data = new LineData(d);
+//        chart.setData(data);
+//        chart.invalidate();
+//------------------------------------------建立數據------------------------------------------
+
+
+
+//        chart.setDrawGridBackground(false);
+//        chart.getDescription().setEnabled(false);
+//        chart.setDrawBorders(false);
+//
+//        chart.getAxisLeft().setEnabled(false);
+//        chart.getAxisLeft().setDrawAxisLine(true);
+//        chart.getAxisRight().setDrawAxisLine(false);
+//        chart.getAxisRight().setDrawGridLines(false);
+//        chart.getXAxis().setDrawAxisLine(false);
+//        chart.getXAxis().setDrawGridLines(false);
+//        // enable touch gestures
+//        chart.setTouchEnabled(false);
+//
+//        // enable scaling and dragging
+//        chart.setDragEnabled(false);
+//        chart.setScaleEnabled(false);
+//
+//        // if disabled, scaling can be done on x- and y-axis separately
+//        chart.setPinchZoom(false);
+//
+//
+//        Legend l = chart.getLegend();
+//        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+//        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+//        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+//        l.setDrawInside(false);
+
+        final TextView txth = root.findViewById(R.id.txtH);
+        final TextView txth01 = root.findViewById(R.id.txth01);
+        final TextView txth02 = root.findViewById(R.id.txth02);
+        final TextView txth03 = root.findViewById(R.id.txth03);
+        final TextView txth01_1 = root.findViewById(R.id.txth01_1);
+        final TextView txth02_2 = root.findViewById(R.id.txth02_2);
+        final TextView txth03_3 = root.findViewById(R.id.txth03_3);
+
+        txth.setText("近期復健紀錄");
+        txth01.setText("日期");
+        txth02.setText("復健部位");
+        txth03.setText("達成(次)");
+        txth01_1.setText("");
+        txth02_2.setText("");
+        txth03_3.setText("");
+
+        for (int j = 9; j >-1 ; j--){
+            txth01_1.append( listStr02.get(j) + "\n");
+            txth02_2.append(listStr03.get(j) + "\n");
+            txth03_3.append(String.valueOf(listStr01.get(j) + "\n"));
+        }
+
         return root;
-
     }
 
     private  AdapterView.OnItemSelectedListener spnOnItemSelected = new AdapterView.OnItemSelectedListener() {
@@ -245,14 +423,6 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             ColorTemplate.VORDIPLOM_COLORS[2]
     };
 
-    private AdapterView.OnItemClickListener listViewRegionOnItemClick
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            String s = getString(R.string.region_selected);
-            mTxtR.setText(s + ((TextView) view).getText());
-        }
-    };
 
 //    @Override
 //    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -330,13 +500,29 @@ HORIZONTAL_BEZIER水平曲線
 
         xAxis.setDrawGridLines(false);//不顯示每個座標點對應X軸的線 (預設顯示)
 
+        xAxis.setLabelRotationAngle(-25);//X軸數字旋轉角度
+
         //設定所需特定標籤資料
         List<String> xList = new ArrayList<String>();
 
-        for (int i = 0; i < 10; i++) {
-//            xList.add("3/" + i);
-            xList.add(listStr02.get(i));
+        for (int i = 9; i >-1; i--) {
+
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd");
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DAY_OF_MONTH, -i);
+            String str = df.format(c.getTime());
+            xList.add(str);
+
         }
+
+//        for (int i = 0; i > 10; i++) {
+//            xList.add(listStr02.get(i).trim().substring(5).replaceAll("-", "/"));
+//        }
+//        Log.d("test07",String.valueOf(xList));
+
+
+
+
 
         /**
          * 格式化軸標籤二種方式：
@@ -443,7 +629,8 @@ HORIZONTAL_BEZIER水平曲線
         description.setPosition(680, 80);//顯示位置座標 (預設右下方)
     }
 
-    public class linedata_sync_fromdb extends AsyncTask<String, String , String> {
+
+    public class chartdata_sync_fromdb extends AsyncTask<String, String , String> {
 
         String z = "";
         Boolean isSuccess = false;
@@ -465,38 +652,92 @@ HORIZONTAL_BEZIER水平曲線
             ArrayList<String> array_sync01 = new ArrayList<String>();
             ArrayList<String> array_sync02 = new ArrayList<String>();
             ArrayList<String> array_sync03 = new ArrayList<String>();
-            ArrayList<String> array_sync04 = new ArrayList<String>();
 
-            String  sync_name = gv.getUserEmail();
-//            String sync_servicename = gv.getServiceName();
-            String sync_servicename = "大腦";
-//            String sync_casename = gv.getCaseName();
-            String sync_casename = "測試01";
+            userid = gv.getUserID();
 
-
-            if (connection!=null){
+          if (connection!=null){
 
                 try{
-
                     statement = connection.createStatement();
-                    ResultSet result01 = statement.executeQuery("SELECT timeortimes, builddate FROM dbo.case_data WHERE user_id ='"+sync_name.toString().trim()+"' AND body = '" + sync_servicename.toString().trim() + "' AND case_name = '" + sync_casename.toString().trim() + "';");
-                    ResultSet result02 = statement.executeQuery("SELECT body FROM dbo.service WHERE user_id ='" + sync_name.toString().trim() + "'; ");
+                    ResultSet result01 = statement.executeQuery("SELECT num_count, builddate, body FROM dbo.case_data WHERE user_id = '"+userid.toString().trim()+"' AND service_id = '"+sync_serviceid.toString().trim()+"';");
 
                     while (result01.next()) {
                         array_sync01.add(result01.getString(1).toString().trim());
                         array_sync02.add(result01.getString(2).toString().trim());
-                        array_sync03.add(result01.getString(2).toString().trim());
+                        array_sync03.add(result01.getString(3).toString().trim());
+                    }
+                    if(array_sync01.size()<11){
+                        for(int i=0;i <10-array_sync01.size() ;i++){
+                            listStr01.add(0);
+                            listStr02.add("-");
+                            listStr03.add("-");
+                        }
                     }
 
+                    for (int i = 0; i < array_sync01.size(); i++) {
+                        listStr01.add((Integer) Integer.valueOf(array_sync01.get(i)));
+                        listStr02.add((String) array_sync02.get(i));
+                        listStr03.add(array_sync03.get(i));
+                        xValue.add(String.valueOf((String) array_sync02.get(i)));
+                    }
+
+
+//                    for (int i = 0; i < array_sync10.size(); i++) {
+//                        listStr04.add((String) array_sync10.get(i));
+//                    }
+
+                }catch (Exception e){
+                    isSuccess = false;
+                    z = e.getMessage();
+                }
+
+            }
+            else {
+                Toast toast = Toast.makeText(getContext(),"目標數據同步失敗", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            return z;
+        }
+    }
+
+    public class spinnerdata_sync_fromdb extends AsyncTask<String, String , String> {
+
+        String z = "";
+        Boolean isSuccess = false;
+
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            ArrayList<String> array_sync03 = new ArrayList<String>();
+            ArrayList<String> array_sync04= new ArrayList<String>();
+
+            userid = gv.getUserID();
+
+            if (connection!=null){
+
+                try{
+                    statement = connection.createStatement();
+                    ResultSet result02 = statement.executeQuery("SELECT service_id, body FROM dbo.service WHERE user_id ='" + userid.toString().trim() + "'; ");
 
                     while (result02.next()) {
-                        array_sync04.add(result01.getString(1).toString().trim());
+                        array_sync04.add(result02.getString(1).toString().trim());
+                        array_sync03.add(result02.getString(2).toString().trim());
                     }
-                    for (int i = 0; i < array_sync01.size(); i++) {
-                        listStr01.add((String) array_sync01.get(i));
-                        listStr02.add(array_sync02.get(i));
-                        xValue.add(String.valueOf(array_sync02.get(i)));
-                        listStr04.add((String) array_sync04.get(i));
+
+                    for (int i = 0; i < array_sync03.size(); i++) {
+                        listStr04.add((String) array_sync03.get(i));
+                        listStr05.add( array_sync04.get(i));
                     }
 
                 }catch (Exception e){
