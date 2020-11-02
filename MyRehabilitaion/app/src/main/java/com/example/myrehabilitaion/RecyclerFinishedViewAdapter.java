@@ -2,47 +2,31 @@ package com.example.myrehabilitaion;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.StrictMode;
-import android.text.Layout;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.myrehabilitaion.ui.Record.RecordFragment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerFinishedViewAdapter extends RecyclerView.Adapter<RecyclerFinishedViewAdapter.ViewHolder> {
 
 
     public String sync_name;
@@ -89,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     // 建構式，用來接收外部程式傳入的項目資料。
-    public RecyclerViewAdapter(Activity activity,Context context, List<String> listString01, List<String> listString02,List<String> ListString03, List<String> ListString04,List<String> ListString05  ,List<Integer> listImg) {
+    public RecyclerFinishedViewAdapter(Activity activity, Context context, List<String> listString01, List<String> listString02, List<String> ListString03, List<String> ListString04, List<String> ListString05  , List<Integer> listImg) {
 
         this.mListString01 =  listString01;
         this.mListString02 =  listString02;
@@ -181,19 +165,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // 然後傳回給RecyclerView。
     @NonNull
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecyclerFinishedViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         // 建立一個 view。
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_targetitem, viewGroup, false);
 
         // 建立這個 view 的 ViewHolder。
-        RecyclerViewAdapter.ViewHolder viewHolder = new RecyclerViewAdapter.ViewHolder(v);
+        RecyclerFinishedViewAdapter.ViewHolder viewHolder = new RecyclerFinishedViewAdapter.ViewHolder(v);
         return viewHolder;
     }
 
 
     // RecyclerView會呼叫這個方法，我們必須把項目資料填入ViewHolder物件。
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerFinishedViewAdapter.ViewHolder viewHolder, int i) {
         // 把資料設定給 ViewHolder。
         viewHolder.mImgView.setImageResource(mListImage.get(i));
         viewHolder.mTxt.setText(mListString01.get(i));
@@ -234,16 +218,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-//            try {
-//                Class.forName(Classes);
-//                connection = DriverManager.getConnection(url, username,password);
-//
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                Class.forName(Classes);
+                connection = DriverManager.getConnection(url, username,password);
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
 
         }

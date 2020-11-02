@@ -11,21 +11,17 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import org.w3c.dom.Text;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,8 +29,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.myrehabilitaion.R.id.spnStyle;
 
 public class Frag_StartRecord extends Fragment {
 
@@ -110,7 +104,7 @@ public class Frag_StartRecord extends Fragment {
 
         gv = (GlobalVariable)getActivity().getApplicationContext();
         body_startrecord = root.findViewById(R.id.body_startrecord);
-        body_startrecord.setText(gv.getServiceName().toString());
+//        body_startrecord.setText(gv.getServiceName().toString());
 
 
         mbtnconfirmstart = root.findViewById(R.id.btn_confirmstart);
@@ -125,14 +119,14 @@ public class Frag_StartRecord extends Fragment {
                 mDlog.show();
 
                 TextView txtview_bodypart= mDlog.findViewById(R.id.txt_bodypart);
-                txtview_bodypart.setText(gv.getServiceName().toString());
+//                txtview_bodypart.setText(gv.getServiceName().toString());
                 Button btnstarttargt = mDlog.findViewById(R.id.btn_checkconfirm);
                 Button btncancel = mDlog.findViewById(R.id.btn_checkcancel);
 
                 btnstarttargt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecordMain recordmain = (RecordMain) getActivity();
+                        Frag_InstantRecord recordmain = (Frag_InstantRecord) getParentFragment();
                         recordmain.showRecordingFragment();
 
                         //int count = Integer.parseInt(edtargetinput.getText().toString());

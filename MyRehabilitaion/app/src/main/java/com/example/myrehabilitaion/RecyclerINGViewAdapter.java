@@ -2,47 +2,30 @@ package com.example.myrehabilitaion;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.StrictMode;
-import android.text.Layout;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.myrehabilitaion.ui.Record.RecordFragment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExampleViewAdapter.ViewHolder> {
+public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGViewAdapter.ViewHolder> {
 
 
     public String userid;
@@ -89,7 +72,7 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
     }
 
     // 建構式，用來接收外部程式傳入的項目資料。
-    public RecyclerExampleViewAdapter(Activity activity,Context context, List<String> listString01, List<String> listString02,List<String> ListString03 ,List<String> ListString04 ,List<String> ListString05 ,List<Integer> listImg) {
+    public RecyclerINGViewAdapter(Activity activity, Context context, List<String> listString01, List<String> listString02, List<String> ListString03 , List<String> ListString04 , List<String> ListString05 , List<Integer> listImg) {
 
         this.mListString01 =  listString01;
         this.mListString02 =  listString02;
@@ -118,16 +101,16 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
             mTxt = (TextView) itemView.findViewById(R.id.txt_target);
             mtxtonbar = itemView.findViewById(R.id.txt_onbar);
             mrecord_progressbar = itemView.findViewById(R.id.reacord_progressBar);
-            mstartrecord_btn = itemView.findViewById(R.id.reacord_startbutton);
-            mstartrecord_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gv.setServiceName(mListString05.get(getAdapterPosition()));
-
-                    Intent intent = new Intent(v.getContext(),RecordMain.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
+//            mstartrecord_btn = itemView.findViewById(R.id.reacord_startbutton);
+//            mstartrecord_btn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    gv.setServiceName(mListString05.get(getAdapterPosition()));
+//
+//
+//                    activity.getFragmentManager().beginTransaction().replace(R.id.nav_home_container,new Fragment()).commit();
+//                }
+//            });
 
             // 處理按下的事件。
             itemView.setOnClickListener(this);
@@ -195,18 +178,18 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
     // 然後傳回給RecyclerView。
     @NonNull
     @Override
-    public RecyclerExampleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecyclerINGViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         // 建立一個 view。
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerexampleview, viewGroup, false);
 
         // 建立這個 view 的 ViewHolder。
-        RecyclerExampleViewAdapter.ViewHolder viewHolder = new RecyclerExampleViewAdapter.ViewHolder(v);
+        RecyclerINGViewAdapter.ViewHolder viewHolder = new RecyclerINGViewAdapter.ViewHolder(v);
         return viewHolder;
     }
 
     // RecyclerView會呼叫這個方法，我們必須把項目資料填入ViewHolder物件。
     @Override
-    public void onBindViewHolder(@NonNull RecyclerExampleViewAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerINGViewAdapter.ViewHolder viewHolder, int i) {
         // 把資料設定給 ViewHolder。
         viewHolder.mImgView.setImageResource(mListImage.get(i));
         viewHolder.mTxt.setText(mListString01.get(i));
@@ -215,7 +198,18 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
         viewHolder.mrecord_progressbar.setProgress(p);
         viewHolder.mtxtonbar.setText(String.valueOf(mListString03.get(i)) + "   /   " + String.valueOf(mListString04.get(i)));
+
+//        if (i==0 || i==2 || i==4 || i==6) {
+//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( viewHolder.itemView.getLayoutParams());
+//            lp.setMargins(0,0,100,50);
+//            viewHolder.itemView.setLayoutParams(lp);
+//        } else {
+//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(viewHolder.itemView.getLayoutParams());
+//            lp.setMargins(100,0,0,50);
+//            viewHolder.itemView.setLayoutParams(lp);
+//        }
     }
+
 
     // RecyclerView會呼叫這個方法，我們要傳回總共有幾個項目。
     @Override
@@ -247,16 +241,16 @@ public class RecyclerExampleViewAdapter extends RecyclerView.Adapter<RecyclerExa
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-//            try {
-//                Class.forName(Classes);
-//                connection = DriverManager.getConnection(url, username,password);
-//
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                Class.forName(Classes);
+                connection = DriverManager.getConnection(url, username,password);
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
 
         }

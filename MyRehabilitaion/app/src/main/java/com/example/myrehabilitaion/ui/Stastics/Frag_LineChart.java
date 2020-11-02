@@ -64,14 +64,6 @@ import java.util.Random;
 
 public class Frag_LineChart extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
 
-//    private static class StaticHandler extends Handler {
-//        private final WeakReference<Frag_LineChart> mLineFragment;
-//        public StaticHandler(Frag_LineChart lineFragment){
-//            mLineFragment = new WeakReference<Frag_LineChart>(lineFragment);
-//        }
-//    }
-
-//    public final Frag_LineChart.StaticHandler mHandler =new Frag_LineChart.StaticHandler(this);
 
     protected static String ip = "140.131.114.241";
     protected static String port = "1433";
@@ -102,7 +94,7 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
     chartdata_sync_fromdb chartdataSyncFromdb;
     spinnerdata_sync_fromdb spinnerdataSyncFromdb;
 
-    Integer sync_serviceid;
+    String sync_serviceid;
 
 
 
@@ -111,31 +103,26 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
         final View root = inflater.inflate(R.layout.fragment_line_chart, container, false);
 
-//        Runnable r = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        };
-//        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
-//
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
-//        try {
-//            Class.forName(Classes);
-//            connection = DriverManager.getConnection(url, username,password);
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        try {
+            Class.forName(Classes);
+            connection = DriverManager.getConnection(url, username,password);
 //            Toast toast = Toast.makeText(getContext(),"Success", Toast.LENGTH_SHORT);
 //            toast.show();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
 //            Toast toast = Toast.makeText(getContext(),"ERROR", Toast.LENGTH_SHORT);
 //            toast.show();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
 //            Toast toast = Toast.makeText(getContext(),"FAILURE", Toast.LENGTH_SHORT);
 //            toast.show();
-//
-//        }
+
+        }
 
 
         chart = root.findViewById(R.id.chart1);
@@ -144,10 +131,9 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
 
         gv = (GlobalVariable)getActivity().getApplicationContext();
 
-
-
         spinnerdataSyncFromdb = new spinnerdata_sync_fromdb();
         spinnerdataSyncFromdb.execute();
+
         try {
             Thread.sleep(100);
             System.out.print("record執行緒睡眠0.1秒！\n");
@@ -155,11 +141,14 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             e.printStackTrace();
         }
 
+
         final List<String> bodypart_list=new ArrayList<String>();
         for(int i=0; i<listStr05.size(); i++){
             bodypart_list.add(listStr05.get(i));
         }
 
+
+        sync_serviceid = listStr04.get(1);
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, bodypart_list);
@@ -169,17 +158,18 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "您選擇了:" + bodypart_list.get(position), Toast.LENGTH_SHORT).show();
-//                sync_serviceid = Integer.valueOf(listStr05.get(position));
+//                sync_serviceid = Integer.valueOf(listStr04.get(position));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-//        sync_serviceid = Integer.valueOf(listStr04.get(0));
+
 
         chartdataSyncFromdb =new chartdata_sync_fromdb();
         chartdataSyncFromdb.execute();
+
         try {
             Thread.sleep(100);
             System.out.print("record執行緒睡眠0.1秒！\n");
@@ -191,7 +181,7 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
         ArrayList<Entry> values01 = new ArrayList<>();
 
         for(int i= 0;i<10 ;i++){
-            values01.add(new Entry(i,Integer.valueOf(listStr01.get(i))));
+//            values01.add(new Entry(i,Integer.valueOf(listStr01.get(i))));
         }
         // greenLine
         ArrayList<Entry> values01_end = new ArrayList<>();
@@ -388,7 +378,6 @@ HORIZONTAL_BEZIER水平曲線
         for (int i = 0; i < 10; i++) {
             xList.add(listStr02.get(i).trim().substring(5).replaceAll("-", "/"));
         }
-        Log.d("test", String.valueOf(xList));
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter(xList));
     }
@@ -527,6 +516,8 @@ HORIZONTAL_BEZIER水平曲線
                         array_sync02.add(result01.getString(2).toString().trim());
                         array_sync03.add(result01.getString(3).toString().trim());
                     }
+
+
                     if(array_sync01.size()<11){
                         for(int i=0;i <10-array_sync01.size() ;i++){
                             listStr01.add("0");
@@ -613,10 +604,12 @@ HORIZONTAL_BEZIER水平曲線
                         array_sync05.add(result02.getString(2).toString().trim());
                     }
 
+
                     for (int i = 0; i < array_sync04.size(); i++) {
                         listStr04.add((String) array_sync04.get(i).toString().trim());
                         listStr05.add((String) array_sync05.get(i).toString().trim());
                     }
+
 
                 }catch (Exception e){
                     isSuccess = false;
