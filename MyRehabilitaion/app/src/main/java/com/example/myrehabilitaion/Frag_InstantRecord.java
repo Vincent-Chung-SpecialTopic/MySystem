@@ -10,25 +10,23 @@ import android.view.ViewGroup;
 
 public class Frag_InstantRecord extends Fragment {
 
-    private Frag_StartRecord mStartRecord;
     private Frag_Recording mRecording;
     private Frag_ChooseService mChooseService;
-    private BT_Main bt_main;
+    private BT_Test bt_test;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
         View root = inflater.inflate(R.layout.activity_record_main, container, false);
 
-        mStartRecord = new Frag_StartRecord();
+
 //        mRecording = new Frag_Recorde();
-        bt_main = new BT_Main();
+        bt_test = new BT_Test();
         mChooseService = new Frag_ChooseService();
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_record01, mChooseService, "Choose Service")
-                .add(R.id.fragment_record02, mStartRecord, "Start Record")
 //                .add(R.id.fragment_record, mRecording, "Recording")
-                .add(R.id.fragment_record02, bt_main, "Recording")
-                .hide(bt_main)
+                .add(R.id.fragment_record02, bt_test, "Recording")
+                .hide(bt_test)
                 .commit();
 
         return root;
@@ -36,20 +34,20 @@ public class Frag_InstantRecord extends Fragment {
     public void hideStartRecordFragment() {
        getActivity(). getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.no_anim, R.anim.trans_out_to_right)
-                .hide(mStartRecord)
+
                 .commit();
     }
 
     public void showRecordingFragment(){
         getActivity().getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.trans_in_from_right, R.anim.no_anim)
-                .show(bt_main)
+                .show(bt_test)
                 .commit();
     };
     public void hideRecordingFragment() {
         getActivity().getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.no_anim, R.anim.trans_out_to_right)
-                .hide(bt_main)
+                .hide(bt_test)
                 .commit();
     };
 //    public void showRecordFinishedFragment(){

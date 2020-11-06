@@ -14,6 +14,7 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,7 +50,7 @@ public class Main extends AppCompatActivity {
     protected BluetoothAdapter mBTAdapter;
     protected BluetoothSocket mBTSocket = null;
     protected Set<BluetoothDevice> mPairedDevices;
-    protected final String TAG = BT_Main.class.getSimpleName();
+
     protected Handler mHandler01;
 
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
@@ -83,9 +84,9 @@ public class Main extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
         toolbar.setBackgroundColor(0xFF336699);
-        toolbar.setTitle("藍芽狀態");
-        bt_status = " [ Bluetooth Status ]";
-        toolbar.setSubtitle(bt_status);
+//        toolbar.setTitle("藍芽狀態");
+//        bt_status = " [ Bluetooth Status ]";
+//        toolbar.setSubtitle(bt_status);
 
 //        toolbar.setLogo(R.drawable.new_logo);
 
@@ -115,9 +116,7 @@ public class Main extends AppCompatActivity {
 */
     }
 
-    public void setToolbarTitle(String string){
-        toolbar.setSubtitle("[" + string + "]");
-    }
+
 
     @SuppressLint("ResourceType")
     @Override
@@ -148,21 +147,21 @@ public class Main extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.item_instruct:
 
-                    mDlog_case = new Dialog(this);
-                    mDlog_case.setContentView(R.layout.page_instruction);
-                    mDlog_case.setCancelable(true);
-                    mDlog_case.show();
-
-                    mListPairedDevicesBtn = (Button) mDlog_case.findViewById(R.id.PairedBtn);
-                    mListPairedDevicesBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            listPairedDevices(v);
-                        }
-                    });
-                    mDevicesListView = (ListView)mDlog_case.findViewById(R.id.devicesListView);
-                    mDevicesListView.setAdapter(mBTArrayAdapter); // assign model to view
-                    mDevicesListView.setOnItemClickListener(mDeviceClickListener);
+//                    mDlog_case = new Dialog(this);
+//                    mDlog_case.setContentView(R.layout.page_instruction);
+//                    mDlog_case.setCancelable(true);
+//                    mDlog_case.show();
+//
+//                    mListPairedDevicesBtn = (Button) mDlog_case.findViewById(R.id.PairedBtn);
+//                    mListPairedDevicesBtn.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            listPairedDevices(v);
+//                        }
+//                    });
+//                    mDevicesListView = (ListView)mDlog_case.findViewById(R.id.devicesListView);
+//                    mDevicesListView.setAdapter(mBTArrayAdapter); // assign model to view
+//                    mDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
                     return true;
                 case R.id.menuItemExit:
@@ -251,4 +250,7 @@ public class Main extends AppCompatActivity {
                     mDlog_case.dismiss();
                 }
             };
+
+
+
 }

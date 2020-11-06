@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -47,6 +48,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
@@ -60,7 +62,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import static com.example.myrehabilitaion.R.layout.simple_list_item_01;
 
 public class Frag_LineChart extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
 
@@ -75,10 +80,12 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
 
     protected Connection connection = null;
 
-    Statement statement = null;
+    Statement statement01 = null;
+    Statement statement02 = null;
 
     GlobalVariable gv ;
     String userid;
+    String serviceid;
 
     protected List<String> listStr01 = new ArrayList<String>();
     protected List<String> listStr02 = new ArrayList<String>();
@@ -90,13 +97,11 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
     String sInfo;
 
     protected LineChart chart;
+    protected ListView mCaseListView;
+    protected ArrayAdapter<String> mCaseArrayAdapter;
 
     chartdata_sync_fromdb chartdataSyncFromdb;
     spinnerdata_sync_fromdb spinnerdataSyncFromdb;
-
-    String sync_serviceid;
-
-
 
     @Nullable
     @Override
@@ -104,7 +109,6 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
         final View root = inflater.inflate(R.layout.fragment_line_chart, container, false);
 
         ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -121,13 +125,7 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             e.printStackTrace();
 //            Toast toast = Toast.makeText(getContext(),"FAILURE", Toast.LENGTH_SHORT);
 //            toast.show();
-
         }
-
-
-        chart = root.findViewById(R.id.chart1);
-        chart.setOnChartValueSelectedListener(this);
-        Spinner spnbody = root.findViewById(R.id.spinner);
 
         gv = (GlobalVariable)getActivity().getApplicationContext();
 
@@ -141,32 +139,6 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             e.printStackTrace();
         }
 
-
-        final List<String> bodypart_list=new ArrayList<String>();
-        for(int i=0; i<listStr05.size(); i++){
-            bodypart_list.add(listStr05.get(i));
-        }
-
-
-        sync_serviceid = listStr04.get(1);
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, bodypart_list);
-        spnbody.setAdapter(adapter);
-
-        spnbody.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "您選擇了:" + bodypart_list.get(position), Toast.LENGTH_SHORT).show();
-//                sync_serviceid = Integer.valueOf(listStr04.get(position));
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-
-
         chartdataSyncFromdb =new chartdata_sync_fromdb();
         chartdataSyncFromdb.execute();
 
@@ -177,15 +149,38 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             e.printStackTrace();
         }
 
+        final List<String> bodypart_list=new ArrayList<String>();
+        for(int i=0; i<listStr05.size(); i++){
+            bodypart_list.add(listStr05.get(i));
+        }
+
+        chart = root.findViewById(R.id.chart1);
+        chart.setOnChartValueSelectedListener(this);
+        Spinner spnbody = root.findViewById(R.id.spinner);
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, bodypart_list);
+        spnbody.setAdapter(adapter);
+        spnbody.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "您選擇了:" + bodypart_list.get(position), Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
 //------------------------------------------建立數據------------------------------------------
         ArrayList<Entry> values01 = new ArrayList<>();
 
-        for(int i= 0;i<10 ;i++){
-//            values01.add(new Entry(i,Integer.valueOf(listStr01.get(i))));
+        for(int i= 6;i<-1 ;i--){
+            values01.add(new Entry(i,Integer.valueOf(listStr01.get(i))));
         }
         // greenLine
         ArrayList<Entry> values01_end = new ArrayList<>();
-        values01_end.add(new Entry(9, Integer.valueOf(listStr01.get(9))));
+        values01_end.add(new Entry(0, Integer.valueOf(listStr01.get(0))));
 
         ArrayList<Entry> values02 = new ArrayList<>();
 //        for(int i=0;i < listStr02.size();i++){
@@ -195,80 +190,32 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
         ArrayList<Entry> values02_end = new ArrayList<>();
 //        values02_end.add(new Entry(Integer.valueOf(str), Integer.valueOf(10)));
 
+//------------------------------------------建立數據------------------------------------------
+
         initX();
         initY();
         initDataSet(values01, values02, values01_end, values02_end);
         initChartFormat();
 
-//        LineDataSet d = new LineDataSet(dataSet01, "DataSet01" );
-//        d.setLineWidth(2.5f);
-//        d.setCircleRadius(4f);
-
-//        int z = Integer.valueOf((int) ((Math.random() * 3) + 3));
-//        int color = colors[z % colors.length];
-//        d.setColor(color);
-//        d.setCircleColor(color);
-//
-//        // make the first DataSet dashed
-//        ((LineDataSet) d).enableDashedLine(10, 10, 0);
-//        ((LineDataSet) d).setColors(ColorTemplate.VORDIPLOM_COLORS);
-//        ((LineDataSet) d).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
-//
-//        LineData data = new LineData(d);
-//        chart.setData(data);
-//        chart.invalidate();
-//------------------------------------------建立數據------------------------------------------
-
-
-
-//        chart.setDrawGridBackground(false);
-//        chart.getDescription().setEnabled(false);
-//        chart.setDrawBorders(false);
-//
-//        chart.getAxisLeft().setEnabled(false);
-//        chart.getAxisLeft().setDrawAxisLine(true);
-//        chart.getAxisRight().setDrawAxisLine(false);
-//        chart.getAxisRight().setDrawGridLines(false);
-//        chart.getXAxis().setDrawAxisLine(false);
-//        chart.getXAxis().setDrawGridLines(false);
-//        // enable touch gestures
-//        chart.setTouchEnabled(false);
-//
-//        // enable scaling and dragging
-//        chart.setDragEnabled(false);
-//        chart.setScaleEnabled(false);
-//
-//        // if disabled, scaling can be done on x- and y-axis separately
-//        chart.setPinchZoom(false);
-//
-//
-//        Legend l = chart.getLegend();
-//        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-//        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-//        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-//        l.setDrawInside(false);
+        ArrayList<NameMapping> case_list = new ArrayList<NameMapping>();
 
         final TextView txth = root.findViewById(R.id.txtH);
         final TextView txth01 = root.findViewById(R.id.txth01);
         final TextView txth02 = root.findViewById(R.id.txth02);
         final TextView txth03 = root.findViewById(R.id.txth03);
-        final TextView txth01_1 = root.findViewById(R.id.txth01_1);
-        final TextView txth02_2 = root.findViewById(R.id.txth02_2);
-        final TextView txth03_3 = root.findViewById(R.id.txth03_3);
 
         txth.setText("近期復健紀錄");
         txth01.setText("日期");
         txth02.setText("復健部位");
         txth03.setText("達成(次)");
-        txth01_1.setText("");
-        txth02_2.setText("");
-        txth03_3.setText("");
 
-        for (int j = 9; j >-1 ; j--){
-            txth01_1.append( listStr02.get(j) + "\n");
-            txth02_2.append(listStr03.get(j) + "\n");
-            txth03_3.append(String.valueOf(listStr01.get(j) + "\n"));
+        for (int j = 6; j >-1 ; j--){
+            case_list.add(new NameMapping(listStr02.get(j),listStr03.get(j),listStr01.get(j)));
         }
+
+        CaseAdapter adapter_case = new CaseAdapter((Activity) getContext(),case_list);
+        ListView listView = root.findViewById(R.id.caseListView);
+        listView.setAdapter(adapter_case);
 
         return root;
     }
@@ -292,13 +239,6 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
             ColorTemplate.VORDIPLOM_COLORS[1],
             ColorTemplate.VORDIPLOM_COLORS[2]
     };
-
-
-//    @Override
-//    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//         chart.resetTracking();
-//
-//    }
 
 
     @Override
@@ -364,20 +304,22 @@ HORIZONTAL_BEZIER水平曲線
         xAxis.setTextColor(Color.GRAY);//X軸標籤顏色
         xAxis.setTextSize(12);//X軸標籤大小
 
-        xAxis.setLabelCount(10);//X軸標籤個數
+        xAxis.setLabelCount(7);//X軸標籤個數
         xAxis.setSpaceMin(0.5f);//折線起點距離左側Y軸距離
         xAxis.setSpaceMax(0.5f);//折線終點距離右側Y軸距離
 
         xAxis.setDrawGridLines(false);//不顯示每個座標點對應X軸的線 (預設顯示)
 
-        xAxis.setLabelRotationAngle(-25);//X軸數字旋轉角度
+        xAxis.setLabelRotationAngle(-20);//X軸數字旋轉角度
 
         //設定所需特定標籤資料
         List<String> xList = new ArrayList<String>();
 
-        for (int i = 0; i < 10; i++) {
-            xList.add(listStr02.get(i).trim().substring(5).replaceAll("-", "/"));
+        for (int i = 6; i > -1 ; i--) {
+//            xList.add(listStr02.get(i).trim().substring(5).replaceAll("-", "/"));
+            xList.add(listStr02.get(i).trim());
         }
+
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter(xList));
     }
@@ -467,9 +409,16 @@ HORIZONTAL_BEZIER水平曲線
         Description description = chart.getDescription();
         description.setEnabled(false);//不顯示Description Label (預設顯示)
 
+        chart.setScaleEnabled(false);// 禁用縮放及點二下觸摸響應，點擊可顯示高亮線
+        chart.setTouchEnabled(false);// 禁用縮放及點二下觸摸響應，點擊也不顯示高亮線
+
         //左下方Legend：圖例數據資料
         Legend legend = chart.getLegend();
         legend.setEnabled(false);//不顯示圖例 (預設顯示)
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setDrawInside(false);
 
         chart.setBackgroundColor(Color.WHITE);//顯示整個圖表背景顏色 (預設灰底)
 
@@ -492,7 +441,6 @@ HORIZONTAL_BEZIER水平曲線
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -504,12 +452,14 @@ HORIZONTAL_BEZIER水平曲線
             ArrayList<String> array_sync03 = new ArrayList<String>();
 
             userid = gv.getUserID();
+            serviceid = gv.getServiceID();
 
           if (connection!=null){
 
                 try{
-                    statement = connection.createStatement();
-                    ResultSet result01 = statement.executeQuery("SELECT num_count, builddate, body FROM dbo.case_data WHERE user_id = "+Integer.valueOf(userid)+" AND service_id = "+Integer.valueOf(sync_serviceid)+";");
+
+                    statement02 = connection.createStatement();
+                    ResultSet result01 = statement02.executeQuery("SELECT num_count, builddate, case_name FROM dbo.case_data WHERE user_id = "+Integer.valueOf(userid)+" AND service_id = "+Integer.valueOf(serviceid)+";");
 
                     while (result01.next()) {
                         array_sync01.add(result01.getString(1).toString().trim());
@@ -518,8 +468,8 @@ HORIZONTAL_BEZIER水平曲線
                     }
 
 
-                    if(array_sync01.size()<11){
-                        for(int i=0;i <10-array_sync01.size() ;i++){
+                    if(array_sync01.size()<=7 ){
+                        for(int i=0;i <7-array_sync01.size() ;i++){
                             listStr01.add("0");
                             listStr02.add("-");
                             listStr03.add("-");
@@ -527,15 +477,15 @@ HORIZONTAL_BEZIER水平曲線
                         }
                     }
 
-                    for (int i = 0; i < array_sync01.size(); i++) {
+                    for (int i = array_sync01.size()-1; i > array_sync01.size()-8; i--) {
                         listStr01.add((String) String.valueOf(array_sync01.get(i)));
                         listStr02.add((String) String.valueOf(array_sync02.get(i)));
                         listStr03.add(String.valueOf(array_sync03.get(i)));
                         xValue.add(String.valueOf((String) array_sync02.get(i)));
                     }
 
-
                 }catch (Exception e){
+
                     isSuccess = false;
                     z = e.getMessage();
                 }
@@ -544,23 +494,21 @@ HORIZONTAL_BEZIER水平曲線
             else {
               int r;
               ArrayList<Integer> r_list= new ArrayList<Integer>();
-              for(int i=0;i<10;i++){
+              for(int i=0;i<7;i++){
                  r = (int) (Math.random()*21);
                   r_list.add(r);
               }
-              for (int i = 9; i >-1; i--) {
-
+              for (int i = 6; i >-1; i--) {
                   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                   Calendar c = Calendar.getInstance();
                   c.add(Calendar.DAY_OF_MONTH, -i);
                   String str = df.format(c.getTime());
                   listStr02.add(str);
                   xValue.add(str);
-
               }
 
-              for (int i = 0; i < 10; i++) {
-                  listStr01.add((String) String.valueOf(r_list.get(i)));
+              for (int i = 0; i < 7; i++) {
+                  listStr01.add(String.valueOf(r_list.get(i)));
                   listStr03.add(String.valueOf(listStr05.get(i)));
               }
             }
@@ -580,7 +528,6 @@ HORIZONTAL_BEZIER水平曲線
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(getContext(),"目標數據同步成功", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -595,8 +542,8 @@ HORIZONTAL_BEZIER水平曲線
             if (connection!=null){
 
                 try{
-                    statement = connection.createStatement();
-                    ResultSet result02 = statement.executeQuery("SELECT service_id, body FROM dbo.service WHERE user_id = " + Integer.valueOf(userid) + ";");
+                    statement01 = connection.createStatement();
+                    ResultSet result02 = statement01.executeQuery("SELECT service_id, body FROM dbo.service WHERE user_id = " + Integer.valueOf(userid) + ";");
 
 
                     while (result02.next()) {
@@ -604,12 +551,12 @@ HORIZONTAL_BEZIER水平曲線
                         array_sync05.add(result02.getString(2).toString().trim());
                     }
 
-
                     for (int i = 0; i < array_sync04.size(); i++) {
                         listStr04.add((String) array_sync04.get(i).toString().trim());
                         listStr05.add((String) array_sync05.get(i).toString().trim());
                     }
 
+                    gv.setServiceID(String.valueOf(listStr04.get(0)));
 
                 }catch (Exception e){
                     isSuccess = false;
@@ -618,12 +565,70 @@ HORIZONTAL_BEZIER水平曲線
 
             }
             else {
-
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 7; i++) {
                     listStr05.add((String) "測試部位" + "0" + i );
                 }
             }
             return z;
+        }
+    }
+
+
+    public class CaseAdapter extends ArrayAdapter<NameMapping> {
+        //建構式
+        public CaseAdapter(Activity context, ArrayList<NameMapping> case_list){
+            super(context, 0, case_list);
+        }
+
+        @Override
+        //改寫getView()方法
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View listItemView = convertView;
+
+            //listItemView可能會是空的，例如App剛啟動時，沒有預先儲存的view可使用
+            if(listItemView == null){
+                listItemView = LayoutInflater.from(getContext()).inflate(simple_list_item_01, parent, false);
+            }
+
+            //找到data，並在View上設定正確的data
+            NameMapping currentName = getItem(position);
+
+            //找到ListItem.xml中的兩個TextView(物種學名和中文名)
+            TextView text_view01 = listItemView.findViewById(R.id.txth01_1);
+            text_view01.setText(currentName.getDate());
+
+            TextView text_view02 = listItemView.findViewById(R.id.txth02_2);
+            text_view02.setText(currentName.getName());
+
+            TextView text_view03 = listItemView.findViewById(R.id.txth03_3);
+            text_view03.setText(currentName.getTimes());
+
+            return listItemView;
+        }
+    }
+
+    public class NameMapping {
+
+
+        private String mDate;
+        private String mName;
+        private String mTimes;
+
+        //建構式
+        public NameMapping(String txt_date, String txt_name,String txt_times){
+            mDate = txt_date;
+            mName = txt_name;
+            mTimes = txt_times;
+        }
+
+        public String getDate(){
+            return mDate;
+        }
+        public String getName(){
+            return mName;
+        }
+        public String getTimes(){
+            return mTimes;
         }
     }
 

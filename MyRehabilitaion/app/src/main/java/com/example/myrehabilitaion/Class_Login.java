@@ -119,6 +119,9 @@ public class Class_Login extends AppCompatActivity {
 
                 checkLogin checkLogin = new checkLogin();
                 checkLogin.execute();
+
+                Intent intent = new Intent(Class_Login.this, Main.class);
+                startActivity(intent);
                 
 
             }

@@ -21,15 +21,11 @@ public class GlobalVariable extends Application {
     private String DeviceName = null;
 
 
-
-
-    public Main main;
-
     @Override
     public void onCreate()
     {
         super.onCreate();
-        main = new Main();
+
     }
 
 
@@ -44,6 +40,7 @@ public class GlobalVariable extends Application {
     public void setUserID(String userid){ this.UserID = userid; }
     public void setServiceID(String serviceid){ this.ServiceID = serviceid; }
     public void setCaseID(String caseid){ this.CaseID = caseid; }
+    public void setCaseName(String casename){ this.CaseID = casename; }
     public void setStr_Count(String count){ this.Str_Count = count; }
     public void setContext_NewFrag(Fragment frag){ this.Context_NewFrag = frag;}
 
@@ -58,11 +55,11 @@ public class GlobalVariable extends Application {
         return Password;
     }
     public String getServiceName(){return ServiceName; }
-    public String getCaseName(){return CaseName; }
     public String getUserID() { return UserID; }
     public String getServiceID() {
         return ServiceID;
     }
+    public String getCaseName(){return CaseName; }
     public String getCaseID() {
         return CaseID;
     }

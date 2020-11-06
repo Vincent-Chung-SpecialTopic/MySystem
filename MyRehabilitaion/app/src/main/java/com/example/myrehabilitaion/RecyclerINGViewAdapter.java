@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -64,6 +66,17 @@ public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGView
 
     // 刪除項目
     public void removeItem(int position){
+
+        case_delete_todb case_delete_todb = new case_delete_todb();
+        case_delete_todb.execute();
+
+        try {
+            Thread.sleep(100);
+            System.out.print("record執行緒睡眠0.1秒！\n");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         service_delete_todb service_delete_todb = new service_delete_todb();
         service_delete_todb.execute();
 
@@ -156,7 +169,7 @@ public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGView
                     btndeltarget.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            gv.setServiceID(mListString01.get(getAdapterPosition()));
+                            gv.setServiceID(mListString05.get(getAdapterPosition()));
 
                             removeItem(getAdapterPosition());
                             mDlog_case.dismiss();
@@ -217,7 +230,7 @@ public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGView
         return this.mListString05.size();
     }
 
-    public class service_delete_todb  extends AsyncTask<String, String , String> {
+    public class case_delete_todb  extends AsyncTask<String, String , String> {
 
         private  String ip = "140.131.114.241";
         private  String port = "1433";
@@ -229,7 +242,7 @@ public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGView
 
         private Connection connection = null;
 
-        Statement statement = null;
+        Statement statement01 = null;
 
         String z = "";
         Boolean isSuccess = false;
@@ -250,8 +263,8 @@ public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGView
 
             } catch (SQLException e) {
                 e.printStackTrace();
-            }
 
+            }
 
         }
 
@@ -270,8 +283,78 @@ public class RecyclerINGViewAdapter extends RecyclerView.Adapter<RecyclerINGView
 
                     userid = gv.getUserID();
                     sync_serviceid = gv.getServiceID();
-                    statement = connection.createStatement();
-                    statement.executeQuery("DELETE FROM dbo.service WHERE user_id ='"+userid.toString().trim()+"' AND service_id ='"+sync_serviceid.toString().trim()+ "';");
+
+                    statement01 = connection.createStatement();
+                    statement01.executeQuery("DELETE FROM dbo.case_data WHERE user_id ="+ Integer.valueOf(userid)+" AND service_id ="+Integer.valueOf(sync_serviceid)+";");
+                    statement01.executeQuery("DELETE FROM dbo.service WHERE user_id ="+ Integer.valueOf(userid)+" AND service_id ="+Integer.valueOf(sync_serviceid)+";");
+
+                }catch (Exception e){
+                    isSuccess = false;
+                    z = e.getMessage();
+                }
+            }
+            else {
+            }
+            return z;
+        }
+    }
+
+    public class service_delete_todb  extends AsyncTask<String, String , String> {
+
+        private  String ip = "140.131.114.241";
+        private  String port = "1433";
+        private  String Classes = "net.sourceforge.jtds.jdbc.Driver";
+        private  String database = "109-rehabilitation";
+        private  String username = "case210906";
+        private  String password = "1@case206";
+        private  String url = "jdbc:jtds:sqlserver://"+ip+":"+port+"/"+database;
+
+        private Connection connection = null;
+
+        Statement statement02 = null;
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            try {
+                Class.forName(Classes);
+                connection = DriverManager.getConnection(url, username,password);
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            GlobalVariable gv = (GlobalVariable) context.getApplicationContext();
+
+            if (connection!=null){
+                try{
+
+                    userid = gv.getUserID();
+                    sync_serviceid = gv.getServiceID();
+
+                    statement02 = connection.createStatement();
+                    statement02.executeQuery("DELETE FROM dbo.service WHERE user_id ="+ Integer.valueOf(userid)+" AND service_id ="+Integer.valueOf(sync_serviceid)+";");
 
                 }catch (Exception e){
                     isSuccess = false;

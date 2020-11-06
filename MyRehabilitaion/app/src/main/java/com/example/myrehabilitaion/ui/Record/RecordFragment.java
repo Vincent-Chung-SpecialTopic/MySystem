@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -13,10 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,7 +63,9 @@ public class RecordFragment extends Fragment {
     Dialog mDlog01;
 
     public EditText edttargetname;
+    public NumberPicker numberPicker_targettimes;
     public EditText edtaddtime;
+    public EditText edt_buildtarget;
 
     public List<String> listStr01;
     public List<String> listStr02;
@@ -251,6 +257,7 @@ public class RecordFragment extends Fragment {
 //        fab02.setVisibility(View.INVISIBLE);
 
         fab01.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View v) {
 
@@ -278,6 +285,12 @@ public class RecordFragment extends Fragment {
                 Button btncancelbox = mDlog01.findViewById(R.id.btn_cancelbox);
                 edttargetname = mDlog01.findViewById(R.id.edt_targetname);
                 edtaddtime = mDlog01.findViewById(R.id.edt_targetdate);
+                numberPicker_targettimes = mDlog01.findViewById(R.id.numpicker_targettimes);
+                numberPicker_targettimes.setTextSize(45);
+
+                numberPicker_targettimes.setMaxValue(10);
+                numberPicker_targettimes.setMinValue(1);
+                numberPicker_targettimes.setValue(5);
 
                 edtaddtime.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -354,7 +367,7 @@ public class RecordFragment extends Fragment {
                 try{
 
                     statement = connection.createStatement();
-                    statement.executeQuery("INSERT INTO dbo.service (user_id,body,date,progress,target) VALUES ('"+Integer.valueOf(userid)+"','"+edttargetname.getText().toString().trim()+"','"+edtaddtime.getText().toString().trim()+"','"+0+"','"+20+"');");
+                    statement.executeQuery("INSERT INTO dbo.service (user_id,body,date,progress,target) VALUES ('"+Integer.valueOf(userid)+"','"+edttargetname.getText().toString().trim()+"','"+edtaddtime.getText().toString().trim()+"','"+0+"','"+numberPicker_targettimes.getValue()+"');");
 
                 }catch (Exception e){
                     isSuccess = false;

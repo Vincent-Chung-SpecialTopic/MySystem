@@ -61,7 +61,7 @@ public class Frag_NewHome extends Fragment {
                     selectedFragment = new RecordFragment_Main();
                     break;
                 case R.id.navigation_instant_record:
-                    selectedFragment = new BT_Main();
+                    selectedFragment = new BT_Test();
 
                     break;
                 case R.id.navigation_stastics:

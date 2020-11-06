@@ -48,9 +48,9 @@ public class RecordFragment_Main extends Fragment {
         public CharSequence getPageTitle(int postion){
             switch (postion){
                 case 0:
-                    return "已完成的復健";
-                case 1:
                     return "正在進行的復健";
+                case 1:
+                    return "完成的復健";
                 default:
                     return null;
             }
@@ -64,16 +64,15 @@ public class RecordFragment_Main extends Fragment {
 
             switch (position){
                 case 0:
-                    fragment = new RecordFragment_Finished();
+                    fragment = new RecordFragment();
 
                     break;
                 case 1:
-                    fragment = new RecordFragment();
+                    fragment = new RecordFragment_Finished();
 
 
                     break;
             }
-            Log.d("test09", String.valueOf(position));
 
             return fragment;
 
@@ -93,7 +92,5 @@ public class RecordFragment_Main extends Fragment {
             trans.remove((Fragment) object);
             trans.commit();
         }
-
-
     }
 }

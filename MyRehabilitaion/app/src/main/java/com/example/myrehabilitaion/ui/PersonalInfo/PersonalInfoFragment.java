@@ -289,7 +289,7 @@ public class PersonalInfoFragment extends Fragment {
                 if(bitmap.getWidth()>bitmap.getHeight()) {
 //                    ScalePic(bitmap, mPhone.heightPixels);
 //                    Bitmap bm = toRoundBitmap(bitmap);
-                    bigPic.setImageBitmap(bitmap);
+//                    bigPic.setImageBitmap(bitmap);
 
                     Bitmap photo = bitmap;
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -302,7 +302,7 @@ public class PersonalInfoFragment extends Fragment {
                 else {
 //                    ScalePic(bitmap, mPhone.widthPixels);
 //                    Bitmap bm = toRoundBitmap(bitmap);
-                    bigPic.setImageBitmap(bitmap);
+//                    bigPic.setImageBitmap(bitmap);
 
                     Bitmap photo = bitmap;
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -321,7 +321,7 @@ public class PersonalInfoFragment extends Fragment {
                 Bundle extras = data.getExtras();
                 Bitmap bp = (Bitmap)  extras.get("data");
                 Bitmap bm = toRoundBitmap(bp);
-                bigPic.setImageBitmap(bm);
+//                bigPic.setImageBitmap(bm);
 
                 Bitmap photo = bm;
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
