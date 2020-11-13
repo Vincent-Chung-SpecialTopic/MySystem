@@ -1,5 +1,5 @@
 package com.example.myrehabilitaion;
-
+import com.example.myrehabilitaion.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 
 public class Class_Login extends AppCompatActivity {
 
@@ -163,7 +164,7 @@ public class Class_Login extends AppCompatActivity {
 
             try {
 
-                String sql = "SELECT * FROM dbo.registered WHERE email = '" + edt_email.getText() + "' AND password = '" + edt_password.getText() + "';";
+                String sql = "SELECT * FROM dbo.registered WHERE email = '" + edt_email.getText() + "' AND password = '" + Encrypt.SHA512(edt_password.getText().toString()) + "';";
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
 

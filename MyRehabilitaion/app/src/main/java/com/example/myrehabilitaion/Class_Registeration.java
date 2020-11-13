@@ -251,7 +251,7 @@ public class Class_Registeration extends AppCompatActivity  {
             if (connection!=null){
                 try{
                     statement = connection.createStatement();
-                    statement.executeQuery("INSERT INTO dbo.registered (username, email, password ,phone, gender, birthday, pic) VALUES ('"+mname.getText().toString().trim()+"','"+memail.getText().toString().trim()+"','"+mpassword.getText().toString().trim()+"','"+mcellphone.getText().toString().trim()+"','"+chkgen.toString().trim()+"','"+mbirthday.getText().toString().trim()+"', CAST('"+bArray.toString().trim()+"' AS VARBINARY(MAX)));");
+                    statement.executeQuery("INSERT INTO dbo.registered (username, email, password ,phone, gender, birthday, pic) VALUES ('"+mname.getText().toString().trim()+"','"+memail.getText().toString().trim()+"','"+ Encrypt.SHA512(mpassword.getText().toString().trim())+"','"+mcellphone.getText().toString().trim()+"','"+chkgen.toString().trim()+"','"+mbirthday.getText().toString().trim()+"', CAST('"+bArray.toString().trim()+"' AS VARBINARY(MAX)));");
 
                 }catch (Exception e){
                     isSuccess = false;
