@@ -7,17 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.StrictMode;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IntRange;
 import androidx.core.app.ActivityCompat;
 
-import com.example.myrehabilitaion.ui.Record.RecordFragment;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -33,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ColorfulActivity extends BaseFragment implements
+public class Frag_ColorfulCalendar extends BaseFragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener,
         CalendarView.OnCalendarLongClickListener,
@@ -70,13 +66,13 @@ public class ColorfulActivity extends BaseFragment implements
 
 
     public static void show(Context context) {
-        context.startActivity(new Intent(context, ColorfulActivity.class));
+        context.startActivity(new Intent(context, Frag_ColorfulCalendar.class));
     }
 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_colorful;
+        return R.layout.fragment_colorfulcalendar;
     }
 
     @SuppressLint("SetTextI18n")

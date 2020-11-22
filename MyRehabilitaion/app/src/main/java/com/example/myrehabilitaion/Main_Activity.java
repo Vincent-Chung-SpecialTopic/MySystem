@@ -3,56 +3,30 @@ package com.example.myrehabilitaion;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.app.Dialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.StrictMode;
-import android.os.SystemClock;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Set;
-import java.util.UUID;
-
-public class Main extends AppCompatActivity {
+public class Main_Activity extends AppCompatActivity {
     GlobalVariable gv;
 
     Toolbar toolbar;
@@ -60,6 +34,8 @@ public class Main extends AppCompatActivity {
 
     TextView side_name;
     TextView side_email;
+    ImageView side_pic;
+    String str_pic;
 
     DrawerLayout mDrawerLayout;
     private AppBarConfiguration mAppBarConfiguration;
@@ -68,7 +44,7 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sidedrawer_home);
+        setContentView(R.layout.activity_sidedrawer_main);
         gv = (GlobalVariable)getApplicationContext();
 
         toolbar = findViewById(R.id.toolbar);
@@ -76,6 +52,7 @@ public class Main extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
         toolbar.setBackgroundColor(0xFF336699);
+
 //        toolbar.setTitle("藍芽狀態");
 //        bt_status = " [ Bluetooth Status ]";
 //        toolbar.setSubtitle(bt_status);
@@ -96,6 +73,12 @@ public class Main extends AppCompatActivity {
         side_email = (TextView)  header.findViewById(R.id.side_email);
         side_name.setText(String.valueOf(gv.getUserName()));
         side_email.setText(String.valueOf(gv.getUserEmail()));
+        side_pic = header.findViewById(R.id.side_pic);
+
+        str_pic = gv.getBig_Pic();
+        byte[] decodeString = Base64.decode(str_pic, Base64.DEFAULT);
+        Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+        side_pic.setImageBitmap(decodebitmap);
 
         //navigationView.setNavigationItemSelectedListener(navViewOnItemSelected);
 
@@ -156,7 +139,7 @@ public class Main extends AppCompatActivity {
 
                     return true;
                 case R.id.menuItemExit:
-                    Intent intent = new Intent(Main.this, Class_Login.class);
+                    Intent intent = new Intent(Main_Activity.this, Activity_Login.class);
                     startActivity(intent);
                     return true;
                 default:

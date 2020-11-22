@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class RecordFragment extends Fragment {
+public class RecordFragment_NotFinished extends Fragment {
 
     private static String ip = "140.131.114.241";
     private static String port = "1433";
@@ -88,7 +85,7 @@ public class RecordFragment extends Fragment {
     public String sync_servicename;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_frag__record, container, false);
+        View root = inflater.inflate(R.layout.fragment_record_notfinished, container, false);
 
         gv = (GlobalVariable)getActivity().getApplicationContext();
         userid = gv.getUserID();
@@ -140,7 +137,7 @@ public class RecordFragment extends Fragment {
                 StaggeredGridLayoutManager.VERTICAL));
 //        recyclerexample.setLayoutManager(layoutManager);
 
-        adapter_exampler = new RecyclerINGViewAdapter(RecordFragment.super.getActivity(),RecordFragment.super.getActivity().getApplicationContext(), listStr01, listStr02,listStr03, listStr04, listStr05, listStr06,listImg);
+        adapter_exampler = new RecyclerINGViewAdapter(RecordFragment_NotFinished.super.getActivity(), RecordFragment_NotFinished.super.getActivity().getApplicationContext(), listStr01, listStr02,listStr03, listStr04, listStr05, listStr06,listImg);
         //adapter_home.addItem(sercmng.Syc());
 
         try {
