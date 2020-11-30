@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -38,6 +40,7 @@ public class Activity_Registeration extends AppCompatActivity  {
     ImageButton imgBtn_emailInspect;
     String str_gen;
     server_checkEmailID server_checkeEmailID;
+    String encodedImage;
 
 
 
@@ -52,6 +55,7 @@ public class Activity_Registeration extends AppCompatActivity  {
     private Connection connection = null;
 
     Statement statement = null;
+    Statement statement_chkid = null;
     byte[] bArray;
 
     @Override
@@ -59,10 +63,12 @@ public class Activity_Registeration extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_registeration);
 
-        Bitmap photo =  BitmapFactory.decodeResource(this.getResources(), R.drawable.man);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.PNG, 100, bos);
-        bArray = bos.toByteArray();
+//        Bitmap photo =  BitmapFactory.decodeResource(this.getResources(), R.drawable.man);
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        photo.compress(Bitmap.CompressFormat.JPEG, 30, bos);
+//        bArray = bos.toByteArray();
+//        encodedImage = Base64.encodeToString(bArray, Base64.DEFAULT);
+
 
         ActivityCompat.requestPermissions(Activity_Registeration.this,new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
 
@@ -169,12 +175,7 @@ public class Activity_Registeration extends AppCompatActivity  {
                             server_registerUser registerUser =new server_registerUser();
                             registerUser.execute();
 
-                            try {
-                                Thread.sleep(100);
-                                System.out.print("    執行緒睡眠0.01秒！\n");
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+
 
                         }else{
                             edt_password.setText("");
@@ -208,20 +209,26 @@ public class Activity_Registeration extends AppCompatActivity  {
 
         String z = "";
         Boolean isSuccess = false;
+        GlobalVariable gv;
 
         @Override
         protected void onPreExecute() {
+            gv = (GlobalVariable)getApplicationContext();
         }
 
         @Override
         protected void onPostExecute(String s) {
-           Toast.makeText(Activity_Registeration.this,"註冊成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Activity_Registeration.this,"註冊成功", Toast.LENGTH_SHORT).show();
 
-
-            GlobalVariable gv = (GlobalVariable)getApplicationContext();
             gv.setUserEmail(edt_email.getText().toString().trim());
             gv.setUserPassword(edt_password.getText().toString().trim());
 
+            try {
+                Thread.sleep(100);
+                System.out.print("    執行緒睡眠0.01秒！\n");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Intent intent = new Intent(Activity_Registeration.this, Activity_Login.class);
             startActivity(intent);
         }
@@ -232,7 +239,7 @@ public class Activity_Registeration extends AppCompatActivity  {
             if (connection!=null){
                 try{
                     statement = connection.createStatement();
-                    statement.executeQuery("INSERT INTO dbo.registered (username, email, password ,phone, gender, birthday, pic) VALUES ('"+edt_name.getText().toString().trim()+"','"+edt_email.getText().toString().trim()+"','"+ Encrypt.SHA512(edt_password.getText().toString().trim())+"','"+edt_phoneNumber.getText().toString().trim()+"','"+radioGrp_gender.toString().trim()+"','"+edt_birthday.getText().toString().trim()+"', CAST('"+bArray.toString().trim()+"' AS VARBINARY(MAX)));");
+                    statement.executeQuery("INSERT INTO dbo.registered (username, email, password ,phone, gender, birthday) VALUES ('"+edt_name.getText().toString().trim()+"','"+edt_email.getText().toString().trim()+"','"+ Encrypt.SHA512(edt_password.getText().toString().trim())+"','"+edt_phoneNumber.getText().toString().trim()+"','"+str_gen.toString().trim()+"','"+edt_birthday.getText().toString().trim()+"');");
 
                 }catch (Exception e){
                     isSuccess = false;
@@ -240,6 +247,7 @@ public class Activity_Registeration extends AppCompatActivity  {
                 }
             }
             else {
+
                 Toast toast = Toast.makeText(Activity_Registeration.this,"註冊失敗", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -266,8 +274,8 @@ public class Activity_Registeration extends AppCompatActivity  {
 
             if (connection!=null){
                 try{
-                    statement = connection.createStatement();
-                    ResultSet rs = statement.executeQuery("SELECT * FROM dbo.registered WHERE email = '" + edt_email.getText().toString().trim() +  "';");
+                    statement_chkid = connection.createStatement();
+                    ResultSet rs = statement_chkid.executeQuery("SELECT * FROM dbo.registered WHERE email = '" + edt_email.getText().toString().trim() +  "';");
 
 
                     if (rs.next()) {
