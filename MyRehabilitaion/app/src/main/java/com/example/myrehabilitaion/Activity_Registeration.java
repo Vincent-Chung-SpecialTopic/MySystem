@@ -63,11 +63,11 @@ public class Activity_Registeration extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_registeration);
 
-//        Bitmap photo =  BitmapFactory.decodeResource(this.getResources(), R.drawable.man);
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        photo.compress(Bitmap.CompressFormat.JPEG, 30, bos);
-//        bArray = bos.toByteArray();
-//        encodedImage = Base64.encodeToString(bArray, Base64.DEFAULT);
+        Bitmap photo =  BitmapFactory.decodeResource(this.getResources(), R.drawable.man);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 30, bos);
+        bArray = bos.toByteArray();
+        encodedImage = Base64.encodeToString(bArray, Base64.DEFAULT);
 
 
         ActivityCompat.requestPermissions(Activity_Registeration.this,new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
@@ -175,8 +175,6 @@ public class Activity_Registeration extends AppCompatActivity  {
                             server_registerUser registerUser =new server_registerUser();
                             registerUser.execute();
 
-
-
                         }else{
                             edt_password.setText("");
                             edt_passwordConfirm.setText("");
@@ -218,7 +216,12 @@ public class Activity_Registeration extends AppCompatActivity  {
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(Activity_Registeration.this,"註冊成功", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(Activity_Registeration.this,"註冊成功", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             gv.setUserEmail(edt_email.getText().toString().trim());
             gv.setUserPassword(edt_password.getText().toString().trim());
@@ -239,7 +242,9 @@ public class Activity_Registeration extends AppCompatActivity  {
             if (connection!=null){
                 try{
                     statement = connection.createStatement();
-                    statement.executeQuery("INSERT INTO dbo.registered (username, email, password ,phone, gender, birthday) VALUES ('"+edt_name.getText().toString().trim()+"','"+edt_email.getText().toString().trim()+"','"+ Encrypt.SHA512(edt_password.getText().toString().trim())+"','"+edt_phoneNumber.getText().toString().trim()+"','"+str_gen.toString().trim()+"','"+edt_birthday.getText().toString().trim()+"');");
+                    statement.executeQuery("INSERT INTO dbo.registered (username, email, password ,phone, gender, birthday, pic) VALUES ('"+edt_name.getText().toString().trim()+"','"+edt_email.getText().toString().trim()+"','"+ Encrypt.SHA512(edt_password.getText().toString().trim())+"','"+edt_phoneNumber.getText().toString().trim()+"','"+str_gen.toString().trim()+"','"+edt_birthday.getText().toString().trim()+"','"+encodedImage+"');");
+
+
 
                 }catch (Exception e){
                     isSuccess = false;
@@ -247,9 +252,14 @@ public class Activity_Registeration extends AppCompatActivity  {
                 }
             }
             else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(Activity_Registeration.this,"註冊失敗", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
 
-                Toast toast = Toast.makeText(Activity_Registeration.this,"註冊失敗", Toast.LENGTH_SHORT);
-                toast.show();
             }
             return z;
         }
