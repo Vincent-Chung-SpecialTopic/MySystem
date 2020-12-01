@@ -84,6 +84,8 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
     protected List<String> listStr03 = new ArrayList<String>();
     protected List<String> listStr04 = new ArrayList<String>();
     protected List<String> listStr05 = new ArrayList<String>();
+    protected List<String> listStr06 = new ArrayList<String>();
+
 
     String sInfo;
 
@@ -213,7 +215,7 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
 
 
                 for (int j = listStr01.size()-1; j >listStr01.size()-8 ; j--){
-                    case_list.add(new NameMapping(listStr02.get(j),listStr03.get(j),listStr01.get(j)));
+                    case_list.add(new NameMapping(listStr02.get(j),listStr03.get(j),listStr01.get(j),listStr06.get(j)));
                 }
 
                 adapter_case = new CaseAdapter((Activity) getContext(),case_list);
@@ -239,12 +241,12 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
         values01_end.add(new Entry(6, Integer.valueOf(listStr01.get(listStr01.size()-1))));
 
         ArrayList<Entry> values02 = new ArrayList<>();
-//        for(int i=0;i < listStr02.size();i++){
-//            values01.add(new Entry(Integer.valueOf(listStr02.get(i)), Integer.valueOf(listStr01.get(i))));
-//        }
+        for(int i= listStr01.size()-7;i<listStr01.size() ;i++){
+            values02.add(new Entry(i,Integer.valueOf(listStr06.get(i).substring(1,1))*60+Integer.valueOf(listStr06.get(i).substring(3,4))));
+        }
         //yellowLine
         ArrayList<Entry> values02_end = new ArrayList<>();
-//        values02_end.add(new Entry(Integer.valueOf(str), Integer.valueOf(10)));
+        values02_end.add(new Entry(6, Integer.valueOf(listStr06.get(listStr01.size()-1))));
 
 //------------------------------------------建立數據------------------------------------------
 
@@ -266,7 +268,7 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
         txth03.setText("達成(次)");
 
         for (int j = listStr01.size()-1; j >listStr01.size()-8 ; j--){
-            case_list.add(new NameMapping(listStr02.get(j),listStr03.get(j),listStr01.get(j)));
+            case_list.add(new NameMapping(listStr02.get(j),listStr03.get(j),listStr01.get(j),listStr06.get(j)));
         }
 
         adapter_case = new CaseAdapter((Activity) getContext(),case_list);
@@ -307,7 +309,10 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
 
 
     private void initDataSet(final ArrayList<Entry> values01, ArrayList<Entry> values02, ArrayList<Entry> values01_end, ArrayList<Entry> values02_end) {
-        final LineDataSet set, set1 = null, set_end, set1_end = null;
+        final LineDataSet set;
+        LineDataSet set1 = null;
+        final LineDataSet set_end;
+        LineDataSet set1_end = null;
         // greenLine
         set = new LineDataSet(values01, "");
         set.setMode(LineDataSet.Mode.LINEAR);//類型為折線
@@ -324,13 +329,22 @@ public class Frag_LineChart extends Fragment implements OnChartGestureListener, 
         set_end.setDrawCircleHole(false);//圓點為實心(預設空心)
         set_end.setDrawValues(false);//不顯示座標點對應Y軸的數字(預設顯示)
 
+        set1 = new LineDataSet(values02, "");
+        set1.setMode(LineDataSet.Mode.LINEAR);//類型為折線
+        set1.setColor(getResources().getColor(R.color.green));//線的顏色
+        set1.setLineWidth(1.5f);//線寬
+        set1.setDrawCircles(false); //不顯示相應座標點的小圓圈(預設顯示)
+        set1.setDrawValues(false);//不顯示座標點對應Y軸的數字(預設顯示)
 
-        /**
-         * yellowLine及其最後的圓點設定可比照如上greenLine設定，不再列示
-         */
+        set1_end = new LineDataSet(values02_end, "");
+        set1_end.setCircleColor(Color.parseColor("#00BBFF"));//圓點顏色
+        set1_end.setColor(Color.parseColor("#00BBFF"));//線的顏色
+        set1_end.setCircleRadius(4);//圓點大小
+        set1_end.setDrawCircleHole(false);//圓點為實心(預設空心)
+        set1_end.setDrawValues(false);//不顯示座標點對應Y軸的數字(預設顯示)
 
 
-        set.setMode(LineDataSet.Mode.LINEAR);//折線
+
      /* 共有四種模式可作變化
 STEPPED立方曲線 (如下greenLine)
 CUBIC_BEZIER圓滑曲線 (如下yellowLine)
@@ -346,7 +360,7 @@ HORIZONTAL_BEZIER水平曲線
         set.setHighlightEnabled(false);//禁用點擊交點後顯示高亮線 (預設顯示，如為false則以下設定均無效)
         set.enableDashedHighlightLine(5, 5, 0);//高亮線以虛線顯示，可設定虛線長度、間距等
         set.setHighlightLineWidth(2);//高亮線寬度
-        set.setHighLightColor(Color.RED);//高亮線顏色
+//        set.setHighLightColor(Color.RED);//高亮線顏色
 
 //理解爲多條線的集合
         LineData data = new LineData(set, set_end);
@@ -514,6 +528,7 @@ HORIZONTAL_BEZIER水平曲線
             ArrayList<String> array_sync01 = new ArrayList<String>();
             ArrayList<String> array_sync02 = new ArrayList<String>();
             ArrayList<String> array_sync03 = new ArrayList<String>();
+            ArrayList<String> array_sync04 = new ArrayList<String>();
 
             userid = gv.getUserID();
             serviceid = gv.getServiceID();
@@ -523,34 +538,39 @@ HORIZONTAL_BEZIER水平曲線
                 try{
 
                     statement02 = connection.createStatement();
-                    ResultSet result01 = statement02.executeQuery("SELECT num_count, builddate, case_name FROM dbo.case_data WHERE user_id = "+Integer.valueOf(userid)+" AND service_id = "+Integer.valueOf(serviceid)+";");
+                    ResultSet result01 = statement02.executeQuery("SELECT num_count, builddate, case_name, timer FROM dbo.case_data WHERE user_id = "+Integer.valueOf(userid)+" AND service_id = "+Integer.valueOf(serviceid)+";");
 
 
                     if(result01.next()){
                         array_sync01.add(result01.getString(1).toString().trim());
                         array_sync02.add(result01.getString(2).toString().trim());
                         array_sync03.add(result01.getString(3).toString().trim());
+                        array_sync04.add(result01.getString(4).toString().trim());
                         while (result01.next()) {
                             array_sync01.add(result01.getString(1).toString().trim());
                             array_sync02.add(result01.getString(2).toString().trim());
                             array_sync03.add(result01.getString(3).toString().trim());
+                            array_sync04.add(result01.getString(4).toString().trim());
                         }
                     }else{
                         array_sync01.add(String.valueOf("0"));
                         array_sync02.add(String.valueOf("-"));
                         array_sync03.add(String.valueOf("-"));
+                        array_sync04.add(String.valueOf("-"));
                     }
                     if(array_sync01.size()<=7 ){
                         for(int i=0;i <7-array_sync01.size() ;i++){
                             listStr01.add("0");
                             listStr02.add("-");
                             listStr03.add("-");
+                            listStr06.add("-");
                         }
                     }
                     for (int i = 0; i < array_sync01.size(); i++) {
                         listStr01.add((String) String.valueOf(array_sync01.get(i)));
                         listStr02.add((String) String.valueOf(array_sync02.get(i)));
                         listStr03.add(String.valueOf(array_sync03.get(i)));
+                        listStr06.add(String.valueOf(array_sync04.get(i)));
                     }
 
 
@@ -679,6 +699,9 @@ HORIZONTAL_BEZIER水平曲線
             TextView text_view03 = listItemView.findViewById(R.id.txth03_3);
             text_view03.setText(currentName.getTimes());
 
+            TextView text_view04 = listItemView.findViewById(R.id.txth04_4);
+            text_view04.setText(currentName.getTimer());
+
             return listItemView;
         }
     }
@@ -689,22 +712,25 @@ HORIZONTAL_BEZIER水平曲線
         private String mDate;
         private String mName;
         private String mTimes;
+        private String mTimer;
 
         //建構式
-        public NameMapping(String txt_date, String txt_name,String txt_times){
+        public NameMapping(String txt_date, String txt_name,String txt_times,String txt_timer){
             mDate = txt_date;
             mName = txt_name;
             mTimes = txt_times;
+            mTimer = txt_timer;
         }
 
-        public String getDate(){
-            return mDate;
-        }
+        public String getDate(){ return mDate; }
         public String getName(){
             return mName;
         }
         public String getTimes(){
             return mTimes;
+        }
+        public String getTimer(){
+            return mTimer;
         }
     }
 

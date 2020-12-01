@@ -642,7 +642,7 @@ public class BT_Test extends Fragment {
                         choose_service_count = Integer.valueOf(resultSet.getString(1).toString().trim());
                     }
 
-                    statement02.executeQuery("INSERT INTO dbo.case_data (user_id,service_id,case_name,num_count,builddate) VALUES ("+Integer.valueOf(userid)+","+Integer.valueOf(servcie_id)+",'"+choose_service.toString().trim() + "\n(紀錄" + (choose_service_count+1) + ")','"+Integer.valueOf(BluetoothCount.getText().toString().trim())+"','"+str+"');");
+                    statement02.executeQuery("INSERT INTO dbo.case_data (user_id,service_id,case_name,num_count,builddate, timer) VALUES ("+Integer.valueOf(userid)+","+Integer.valueOf(servcie_id)+",'"+choose_service.toString().trim() + "\n(紀錄" + (choose_service_count+1) + ")','"+Integer.valueOf(BluetoothCount.getText().toString().trim())+"','"+str+"','"+TimerTV.getText().toString().trim()+"');");
 
                 }catch (Exception e){
                     isSuccess = false;
